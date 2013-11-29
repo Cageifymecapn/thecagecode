@@ -19,20 +19,28 @@
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_weight="1" 
->
+	>
 
         <Button
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Info" />
+            android:text="Info" />
         
         <Button
             android:id="@+id/button_capture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:text="@string/Capture" />
+            android:text="Capture" />
+
+        <Button
+            android:id="@+id/upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/button_capture"
+            android:layout_gravity="bottom|right"
+            android:text="Upload" />
 
     </FrameLayout>
 
