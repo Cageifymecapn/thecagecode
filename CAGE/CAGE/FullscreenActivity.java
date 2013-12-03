@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Picture;
 import android.hardware.Camera;
+import android.hardware.Camera.PictureCallback;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,7 +36,7 @@ public class FullscreenActivity extends Activity {
 	Bitmap mImageBitmap;
 	ImageView mImageView;
 	Camera mCamera;
-	Picture mPicture;
+	PictureCallback mPicture;
     private static final boolean AUTO_HIDE = true;
 
     /**
@@ -120,10 +121,10 @@ public class FullscreenActivity extends Activity {
                 {
                     // get an image from the camera
                 	
-                    //mCamera.takePicture(null, null, mPicture);
-                	System.out.println("Click");
+                    mCamera.takePicture(null, null, mPicture);
                 }
             }
+        
         );
         contentView.setOnClickListener(new View.OnClickListener() {
             @Override
