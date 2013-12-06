@@ -12,4 +12,22 @@
         android:contentDescription="@string/download"
         android:src="@drawable/download" />
 
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="54dp"
+        android:layout_height="78dp"
+        android:layout_column="0"
+        android:layout_gravity="left|bottom"
+        android:layout_row="0"
+        android:contentDescription="@string/flip"
+        android:src="@drawable/flip" />
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_column="0"
+        android:layout_gravity="left|top"
+        android:layout_row="0"
+        android:contentDescription="@string/Undo"
+        android:src="@drawable/undo" />
+
 </GridLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MyCamera!</string>
+    <string name="app_name">MyCamera</string>
+    <string name="snap">snap</string>
+    <string name="uploadupload"></string>
+    <string name="info"></string>
+    <string name="download"></string>
+</resources>
