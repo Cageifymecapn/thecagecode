@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, MyCamera!</string>
+    <string name="app_name">MyCamera</string>
+    <string name="snap">snap</string>
+    <string name="uploadupload">uploadupload</string>
+    <string name="info"></string>
+    <string name="download"></string>
+    <string name="flip"></string>
+    <string name="android_hardware_camera_autofocus">android.hardware.camera.autofocus</string>
+    <string name="Undo"></string>
+    <string name="imageView"></string>
+</resources>

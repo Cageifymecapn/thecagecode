@@ -1,19 +1,39 @@
 package com.example.thecagifier;
 
-import com.example.thecagifier.util.SystemUiHider;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PointF;
+//import android.hardware.Camera.Face;
+import android.media.FaceDetector;
+import android.media.FaceDetector.Face;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.thecagifier.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -23,7 +43,11 @@ import android.widget.ImageView;
  */
 public class MainScreen extends Activity {
 	
+	//Initializes the picture we're going to take
 	ImageView Picture;
+	
+	
+	
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -52,30 +76,44 @@ public class MainScreen extends Activity {
      */
     private SystemUiHider mSystemUiHider;
 
-    @Override
+    @SuppressLint("CutPasteId") @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.mainscreen);
-        Picture = (ImageView) findViewById(R.id.imageView);
+        Picture = (ImageView) findViewById(R.id.imageView); // Austin : set image in background to photo
         
-        Button takephoto = (Button) findViewById(R.id.takepicture);
-        takephoto.setOnClickListener(new OnClickListener()
+        //This where the various buttons are assigned to buttons on the UI 
+        Button takephoto = (Button) findViewById(R.id.takepicture); // Austin : create button to take a picture
+        Button openGallery = (Button) findViewById(R.id.gallery);
+        
+        //Response to the takepicture button being pushed
+        takephoto.setOnClickListener(new OnClickListener() 
         {
-
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(intent, 0);
-				
+				//Android has built-in things for taking pictures
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
+				startActivityForResult(intent, 0);		
 			}
-        	
+        });
+        
+        //Everett: Opens the gallery when Gallery button is pressed. 
+        //Got help for the Intent from http://stackoverflow.com/questions/18416122/open-gallery-app-in-android
+        openGallery.setOnClickListener(new OnClickListener()
+        {
+        	@Override
+        	public void onClick(View arg0) {
+        		//Android has something to open the gallery already
+        		Intent galleryIntent = new Intent(Intent.ACTION_VIEW, 
+        				Uri.parse("content://media/internal/images/media"));
+        		startActivityForResult(galleryIntent, 1);
+        	}
         });
        
-
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = controlsView;
+        final View contentView = findViewById(R.id.fullscreen_content_controls);
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -137,16 +175,105 @@ public class MainScreen extends Activity {
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
     
+    //Written by Austin
+
     @Override
+    
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
     	if(requestCode == 0)
     	{
-    		Bitmap theImage = (Bitmap) data.getExtras().get("data");
+    		int max = 5;
+    		Bitmap theImage = (Bitmap) data.getExtras().get("data"); // Austin : Set Background to the photo
     		Picture.setImageBitmap(theImage);
+	
+    		int width = theImage.getWidth();
+            int height = theImage.getHeight();
+             
+            FaceDetector detector = new FaceDetector(width, height,5);
+            Face[] faces = new Face[max];
+            //Face[] faces = new Face[5];
+            Bitmap bitmap565 = Bitmap.createBitmap(width, height, Config.RGB_565);
+            
+            Paint ditherPaint = new Paint();
+            Paint drawPaint = new Paint();
+             
+            ditherPaint.setDither(true);
+            drawPaint.setColor(Color.RED);
+            drawPaint.setStyle(Paint.Style.STROKE);
+            drawPaint.setStrokeWidth(2);
+            
+            Canvas canvas = new Canvas();
+            canvas.setBitmap(bitmap565);
+            canvas.drawBitmap(theImage, 0, 0, ditherPaint);
+             
+            int facesFound = detector.findFaces(bitmap565, faces);
+            PointF midPoint = new PointF();
+            float eyeDistance = 0.0f;
+            float confidence = 0.0f;
+            
+            if(facesFound > 0)
+            {
+                    for(int index=0; index<facesFound; ++index){
+                            faces[index].getMidPoint(midPoint);
+                            eyeDistance = faces[index].eyesDistance();
+                            confidence = faces[index].confidence();
+                             
+                            Log.i("FaceDetector",
+                                            "Confidence: " + confidence +
+                                            ", Eye distance: " + eyeDistance +
+                                            ", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
+                             
+                            canvas.drawRect((int)midPoint.x - eyeDistance ,
+                                                            (int)midPoint.y - eyeDistance ,
+                                                            (int)midPoint.x + eyeDistance,
+                                                            (int)midPoint.y + eyeDistance, drawPaint);
+                    }
+            }
+            
+            String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
+            
+            try {
+                    FileOutputStream fos = new FileOutputStream(filepath);
+                     
+                    bitmap565.compress(CompressFormat.JPEG, 90, fos);
+                     
+                    fos.flush();
+                    fos.close();
+            } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+            } catch (IOException e) {
+                    e.printStackTrace();
+            }
+             
+           // ImageView imageView = (ImageView)findViewById(R.id.image_view);
+             
+            Picture.setImageBitmap(bitmap565);
     		
     	}
+    	
+    	//The request code for opening the gallery and selecting an image
+    	if(requestCode == 1)
+    	{
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(
+                                   selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String filePath = cursor.getString(columnIndex);
+                cursor.close();
+
+
+                //sets theImage to the one of the selected path, and then sets the 
+                //background Picture to that theImage
+                Bitmap theImage = BitmapFactory.decodeFile(filePath);
+                Picture.setImageBitmap(theImage);
+        }
     }
+
     
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
