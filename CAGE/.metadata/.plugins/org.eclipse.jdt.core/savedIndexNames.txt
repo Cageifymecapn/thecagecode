@@ -1,2 +1,0 @@
-INDEX VERSION 1.126+C:\Users\George\Documents\GitHub\thecagecode\CAGE\.metadata\.plugins\org.eclipse.jdt.core
-4162792775.index
