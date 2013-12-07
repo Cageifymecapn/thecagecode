@@ -9,4 +9,5 @@
     <string name="flip"></string>
     <string name="android_hardware_camera_autofocus">android.hardware.camera.autofocus</string>
     <string name="Undo"></string>
+    <string name="imageView"></string>
 </resources>

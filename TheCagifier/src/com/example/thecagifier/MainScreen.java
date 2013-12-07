@@ -4,11 +4,16 @@ import com.example.thecagifier.util.SystemUiHider;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -17,6 +22,8 @@ import android.view.View;
  * @see SystemUiHider
  */
 public class MainScreen extends Activity {
+	
+	ImageView Picture;
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -47,12 +54,28 @@ public class MainScreen extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+    	
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.mainscreen);
+        Picture = (ImageView) findViewById(R.id.imageView);
+        
+        Button takephoto = (Button) findViewById(R.id.takepicture);
+        takephoto.setOnClickListener(new OnClickListener()
+        {
+
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+				startActivityForResult(intent, 0);
+				
+			}
+        	
+        });
+       
 
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content);
+        final View contentView = controlsView;
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -111,10 +134,20 @@ public class MainScreen extends Activity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
-
+    
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+    	if(requestCode == 0)
+    	{
+    		Bitmap theImage = (Bitmap) data.getExtras().get("data");
+    		Picture.setImageBitmap(theImage);
+    		
+    	}
+    }
+    
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
