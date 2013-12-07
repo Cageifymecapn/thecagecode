@@ -3,11 +3,15 @@ package com.example.thecagifier;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 <<<<<<< HEAD
@@ -46,6 +50,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.thecagifier.util.SystemUiHider;
@@ -90,6 +95,26 @@ public class MainScreen extends Activity {
      * The instance of the {@link SystemUiHider} for this activity.
      */
     private SystemUiHider mSystemUiHider;
+    
+    private void dispatchTakePictureIntent(int actionCode) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(takePictureIntent, actionCode);
+    }
+    
+    public static boolean isIntentAvailable(Context context, String action) {
+        final PackageManager packageManager = context.getPackageManager();
+        final Intent intent = new Intent(action);
+        List<ResolveInfo> list =
+                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return list.size() > 0;
+    }
+    
+    private void handleSmallCameraPhoto(Intent intent) {
+        Bundle extras = intent.getExtras();
+        Bitmap mImageBitmap = (Bitmap) extras.get("data");
+        Picture.setImageBitmap(mImageBitmap);
+    }
+    
 
     @SuppressLint("CutPasteId") @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +149,8 @@ public class MainScreen extends Activity {
 >>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
 =======
         //This where the various buttons are assigned to buttons on the UI 
-        Button takephoto = (Button) findViewById(R.id.takepicture); // Austin : create button to take a picture
-        Button openGallery = (Button) findViewById(R.id.gallery);
+        ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture); // Austin : create button to take a picture
+        ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         
         //Response to the takepicture button being pushed
         takephoto.setOnClickListener(new OnClickListener() 
@@ -133,9 +158,15 @@ public class MainScreen extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				//Android has built-in things for taking pictures
+<<<<<<< HEAD
+				//Intent TakePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
+				//startActivityForResult(TakePictureIntent, 0);	
+				dispatchTakePictureIntent(0);
+=======
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
 				startActivityForResult(intent, 0);		
 >>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
+>>>>>>> 639609828c867d44db6f7d328d5675d452dd3b4a
 			}
         });
         
@@ -227,12 +258,14 @@ public class MainScreen extends Activity {
 >>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
 =======
     //Written by Austin
+<<<<<<< HEAD
+=======
 
 >>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
+>>>>>>> 639609828c867d44db6f7d328d5675d452dd3b4a
     @Override
-    
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    {    	
     	if(requestCode == 0)
     	{
     		int max = 5;
@@ -311,7 +344,7 @@ public class MainScreen extends Activity {
 >>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
     	}
     	
-    	//The request code for opening the gallery and selecting an image
+    	//Everett: The request code for opening the gallery and selecting an image
     	if(requestCode == 1)
     	{
                 Uri selectedImage = data.getData();
@@ -332,9 +365,8 @@ public class MainScreen extends Activity {
                 Picture.setImageBitmap(theImage);
         }
     }
-
     
-    protected void onPostCreate(Bundle savedInstanceState) {
+	protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
         // Trigger the initial hide() shortly after the activity has been
