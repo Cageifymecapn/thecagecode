@@ -2,54 +2,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
-    tools:context=".MainScreen" >
+    android:background="#0099cc">
 
-    <!--
-         The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc.
-    -->
-
-    <TextView
-        android:id="@+id/fullscreen_content"
+    <GridLayout
+        android:id="@+id/fullscreen_content_controls"
+        style="?buttonBarStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:keepScreenOn="true"
-        android:text="@string/dummy_content"
-        android:textColor="#33b5e5"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:layout_height="58dp"
+        android:layout_gravity="bottom"
+        android:background="@color/black_overlay"
+        android:columnCount="2"
+        android:contentDescription="@string/snap"
+        android:orientation="horizontal"
+        tools:ignore="UselessParent" >
 
-    <!--
-         This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows.
-    -->
+        <Space
+            android:layout_column="1"
+            android:layout_gravity="fill_vertical"
+            android:layout_row="4" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true" >
+        <ImageButton
+            android:id="@+id/imageButton1"
+            android:layout_column="0"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_row="4"
+            android:contentDescription="@string/snap"
+            android:src="@drawable/snap" />
 
-        <LinearLayout
-            android:id="@+id/fullscreen_content_controls"
-            style="?buttonBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:background="@color/black_overlay"
-            android:orientation="horizontal"
-            tools:ignore="UselessParent" >
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_column="0"
+            android:layout_gravity="left|top"
+            android:layout_row="4"
+            android:contentDescription="@string/uploadupload"
+            android:src="@drawable/upload" />
 
-            <Button
-                android:id="@+id/dummy_button"
-                style="?buttonBarButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/dummy_button" />
-        </LinearLayout>
-    </FrameLayout>
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_column="0"
+            android:layout_gravity="right|top"
+            android:layout_row="4"
+            android:contentDescription="@string/info"
+            android:src="@drawable/info" />
+
+    </GridLayout>
 
 </FrameLayout>
