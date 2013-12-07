@@ -2,10 +2,12 @@ package com.example.thecagifier;
 
 import com.example.thecagifier.util.SystemUiHider;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +25,11 @@ import android.widget.ImageView;
  */
 public class MainScreen extends Activity {
 	
+	//Initializes the picture we're going to take
 	ImageView Picture;
+	
+	
+	
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -52,7 +58,7 @@ public class MainScreen extends Activity {
      */
     private SystemUiHider mSystemUiHider;
 
-    @Override
+    @SuppressLint("CutPasteId") @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
@@ -60,22 +66,36 @@ public class MainScreen extends Activity {
         setContentView(R.layout.mainscreen);
         Picture = (ImageView) findViewById(R.id.imageView);
         
+        //This where the various buttons are assigned to buttons on the UI 
         Button takephoto = (Button) findViewById(R.id.takepicture);
+        Button openGallery = (Button) findViewById(R.id.gallery);
+        
+        //Response to the takepicture button being pushed
         takephoto.setOnClickListener(new OnClickListener()
         {
-
 			@Override
 			public void onClick(View arg0) {
+				//Android has built-in things for taking pictures
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 				startActivityForResult(intent, 0);
-				
 			}
-        	
+        });
+        
+        //Everett: Opens the gallery when Gallery button is pressed. 
+        //Got help for the Intent from http://stackoverflow.com/questions/18416122/open-gallery-app-in-android
+        openGallery.setOnClickListener(new OnClickListener()
+        {
+        	@Override
+        	public void onClick(View arg0) {
+        		//Android has something to open the gallery already
+        		Intent galleryIntent = new Intent(Intent.ACTION_VIEW, 
+        				Uri.parse("content://media/internal/images/media"));
+        		startActivity(galleryIntent);
+        	}
         });
        
-
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = controlsView;
+        final View contentView = findViewById(R.id.fullscreen_content_controls);
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
@@ -137,6 +157,7 @@ public class MainScreen extends Activity {
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
     
+    //Written by Austin
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -144,7 +165,6 @@ public class MainScreen extends Activity {
     	{
     		Bitmap theImage = (Bitmap) data.getExtras().get("data");
     		Picture.setImageBitmap(theImage);
-    		
     	}
     }
     

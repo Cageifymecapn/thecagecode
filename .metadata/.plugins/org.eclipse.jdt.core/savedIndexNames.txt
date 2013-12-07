@@ -1,3 +1,1 @@
-INDEX VERSION 1.126+C:\Users\Austin Schiller\Documents\GitHub\thecagecode\.metadata\.plugins\org.eclipse.jdt.core
-1836812030.index
-2174983014.index
+INDEX VERSION 1.126+C:\Users\Everett\Documents\GitHub\thecagecode\.metadata\.plugins\org.eclipse.jdt.core

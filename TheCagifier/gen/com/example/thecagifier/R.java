@@ -52,6 +52,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int app_name=0x7f050001;
         public static final int download=0x7f050005;
         public static final int flip=0x7f050006;
+        public static final int gallery=0x7f05000a;
         public static final int hello=0x7f050000;
         public static final int imageView=0x7f050009;
         public static final int info=0x7f050004;
