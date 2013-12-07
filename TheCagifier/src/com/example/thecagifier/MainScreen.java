@@ -1,10 +1,8 @@
 package com.example.thecagifier;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -14,18 +12,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-<<<<<<< HEAD
-<<<<<<< HEAD
-import android.net.Uri;
-=======
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Bitmap.Config;
-=======
 import android.net.Uri;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,23 +23,15 @@ import android.graphics.PointF;
 //import android.hardware.Camera.Face;
 import android.media.FaceDetector;
 import android.media.FaceDetector.Face;
-<<<<<<< HEAD
->>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
-=======
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-<<<<<<< HEAD
-=======
 import android.provider.MediaStore;
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -65,8 +47,6 @@ public class MainScreen extends Activity {
 	
 	//Initializes the picture we're going to take
 	ImageView Picture;
-	
-	
 	
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -114,42 +94,19 @@ public class MainScreen extends Activity {
         Bitmap mImageBitmap = (Bitmap) extras.get("data");
         Picture.setImageBitmap(mImageBitmap);
     }
-    
 
-    @SuppressLint("CutPasteId") @Override
+    @SuppressLint("CutPasteId") 
+    
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
     	
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.mainscreen);
         Picture = (ImageView) findViewById(R.id.imageView); // Austin : set image in background to photo
-        
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         //This where the various buttons are assigned to buttons on the UI 
-        Button takephoto = (Button) findViewById(R.id.takepicture);
-        Button openGallery = (Button) findViewById(R.id.gallery);
-        
-        //Response to the takepicture button being pushed
-        takephoto.setOnClickListener(new OnClickListener()
-=======
-        Button takephoto = (Button) findViewById(R.id.takepicture); // Austin : create button to take a picture
-        takephoto.setOnClickListener(new OnClickListener() 
->>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
-        {
-			@Override
-			public void onClick(View arg0) {
-<<<<<<< HEAD
-				//Android has built-in things for taking pictures
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-				startActivityForResult(intent, 0);
-=======
-				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
-				startActivityForResult(intent, 0);		
->>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
-=======
-        //This where the various buttons are assigned to buttons on the UI 
-        ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture); // Austin : create button to take a picture
+        ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         
         //Response to the takepicture button being pushed
@@ -158,15 +115,12 @@ public class MainScreen extends Activity {
 			@Override
 			public void onClick(View arg0) {
 				//Android has built-in things for taking pictures
-<<<<<<< HEAD
 				//Intent TakePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
 				//startActivityForResult(TakePictureIntent, 0);	
 				dispatchTakePictureIntent(0);
-=======
 				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
 				startActivityForResult(intent, 0);		
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
->>>>>>> 639609828c867d44db6f7d328d5675d452dd3b4a
+
 			}
         });
         
@@ -179,11 +133,8 @@ public class MainScreen extends Activity {
         		//Android has something to open the gallery already
         		Intent galleryIntent = new Intent(Intent.ACTION_VIEW, 
         				Uri.parse("content://media/internal/images/media"));
-<<<<<<< HEAD
         		startActivity(galleryIntent);
-=======
         		startActivityForResult(galleryIntent, 1);
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
         	}
         });
        
@@ -249,20 +200,11 @@ public class MainScreen extends Activity {
         // while interacting with the UI.
         //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
     }
-    
-<<<<<<< HEAD
-<<<<<<< HEAD
-    //Written by Austin
-=======
 
->>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
-=======
     //Written by Austin
-<<<<<<< HEAD
-=======
 
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
->>>>>>> 639609828c867d44db6f7d328d5675d452dd3b4a
+    //Written by Austin
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {    	
@@ -271,13 +213,7 @@ public class MainScreen extends Activity {
     		int max = 5;
     		Bitmap theImage = (Bitmap) data.getExtras().get("data"); // Austin : Set Background to the photo
     		Picture.setImageBitmap(theImage);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    		
-=======
-	
->>>>>>> c3595dba890faec2a48ce37064d01ab6281f10c3
+
     		int width = theImage.getWidth();
             int height = theImage.getHeight();
              
@@ -341,7 +277,6 @@ public class MainScreen extends Activity {
              
             Picture.setImageBitmap(bitmap565);
     		
->>>>>>> e08fa89738127192fc9af81674c14fe40e0acd61
     	}
     	
     	//Everett: The request code for opening the gallery and selecting an image
