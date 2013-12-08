@@ -16,5 +16,9 @@
     <string name="infostatement">Loads this Info Screen</string>
     <string name="flipstatement">Switches the direction Nick faces</string>
     <string name="uploadstatement">Upload an Image from your Gallery</string>
+    <string name="undostatement">Undo something or go back to the Home screen</string>
+    <string name="switchcameras"></string>
+    <string name="switchstatement">Switches from Front to Back Camera</string>
     <string name="INFORMATION">INFORMATION</string>
+    <string name="takephoto"></string>
 </resources>
