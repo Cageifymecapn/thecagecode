@@ -120,17 +120,46 @@ private final String tag = "mainscreen";
     	//Everett: The request code for opening the gallery and selecting an image
     	if(requestCode == 1)
     	{
-                Uri selectedImageUri = data.getData();
-                String selectedImagePath = getPath(selectedImageUri);
-
-                //sets theImage to the one of the selected path, and then sets the 
-                //background Picture to that theImage
-                Bitmap theImage = BitmapFactory.decodeFile(selectedImagePath);
-//                Picture.setImageBitmap(theImage);
-//                FacialRecognition(theImage);
+            setContentView(R.layout.editor);
+    	    Uri selectedImageUri = data.getData();
+            String selectedImagePath = getPath(selectedImageUri);
+            //sets theImage to the one of the selected path, and then sets the 
+            //background Picture to that theImage
+            Bitmap selectedImage = BitmapFactory.decodeFile(selectedImagePath);
+            ImageView editorPicture = (ImageView) findViewById(R.id.imageView);
+            editorPicture.setImageBitmap(selectedImage);  
     	}   	
-
     };
+    
+    private void galleryAddPic(Intent data) throws IOException{
+	//Create an image file name
+    String timeStamp = 
+        new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+    String imageFileName = "IMG_" + timeStamp + "_";
+    
+	//Sets the storage directory
+    File storageDir = new File(
+		Environment.getExternalStoragePublicDirectory(
+		        Environment.DIRECTORY_PICTURES
+		    ), imageFileName);
+
+    File file = File.createTempFile(
+            imageFileName, 
+            ".jpg", 
+            storageDir
+        );
+    if(!file.exists())
+    	file.createNewFile();
+    //Append the file name to the intent
+	String fileString = file.toString();
+    Uri contentUri = Uri.fromFile(file);
+    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
+    sendBroadcast(mediaScanIntent);
+
+//  Bitmap theImage = (Bitmap) data.getExtras().get("data");
+//  MediaStore.Images.Media.insertImage(getContentResolver(), theImage, file.getName() , "Made by Cagifier");
+
+  }
     
     
     @Override
