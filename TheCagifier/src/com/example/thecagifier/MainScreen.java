@@ -1,5 +1,4 @@
 package com.example.thecagifier;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -109,7 +108,7 @@ public class MainScreen extends Activity {
         //This where the various buttons are assigned to buttons on the UI 
         ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
-        
+        ImageButton info=(ImageButton) findViewById(R.id.info);
         //Response to the takepicture button being pushed
         takephoto.setOnClickListener(new OnClickListener() 
         {
@@ -119,8 +118,8 @@ public class MainScreen extends Activity {
 				//Intent TakePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
 				//startActivityForResult(TakePictureIntent, 0);	
 				dispatchTakePictureIntent(0);
-//				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
-//				startActivityForResult(intent, 0);		
+				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
+				startActivityForResult(intent, 0);		
 
 			}
         });
@@ -138,16 +137,24 @@ public class MainScreen extends Activity {
         		startActivityForResult(galleryIntent, 1);
         	}
         });
-       
+        
+        info.setOnClickListener(new OnClickListener() 
+        {
+			@Override
+			public void onClick(View arg0) {
+				Intent goToInfoPage=new Intent();
+			}
+        });
+        
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content_controls);
+        final View contentView = controlsView;
+        
 
         // Set up an instance of SystemUiHider to control the system UI for
         // this activity.
         mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
         mSystemUiHider.setup();
-        mSystemUiHider.show();
-        /*mSystemUiHider
+        mSystemUiHider
                 .setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
                     // Cached values.
                     int mControlsHeight;
@@ -195,7 +202,7 @@ public class MainScreen extends Activity {
                     mSystemUiHider.show();
                 }
             }
-        });*/
+        });
 
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
@@ -212,13 +219,73 @@ public class MainScreen extends Activity {
     {    	
     	if(requestCode == 0)
     	{
+    		int max = 5;
     		Bitmap theImage = (Bitmap) data.getExtras().get("data"); // Austin : Set Background to the photo
     		Picture.setImageBitmap(theImage);
-    		File storageDir = new File(
-    				Environment.getExternalStoragePublicDirectory(
-    			        Environment.DIRECTORY_PICTURES
-    			    ), "Name");
-    		FacialRecognition(theImage);
+
+    		int width = theImage.getWidth();
+            int height = theImage.getHeight();
+             
+            FaceDetector detector = new FaceDetector(width, height,5);
+            Face[] faces = new Face[max];
+            //Face[] faces = new Face[5];
+            Bitmap bitmap565 = Bitmap.createBitmap(width, height, Config.RGB_565);
+            
+            Paint ditherPaint = new Paint();
+            Paint drawPaint = new Paint();
+             
+            ditherPaint.setDither(true);
+            drawPaint.setColor(Color.RED);
+            drawPaint.setStyle(Paint.Style.STROKE);
+            drawPaint.setStrokeWidth(2);
+            
+            Canvas canvas = new Canvas();
+            canvas.setBitmap(bitmap565);
+            canvas.drawBitmap(theImage, 0, 0, ditherPaint);
+             
+            int facesFound = detector.findFaces(bitmap565, faces);
+            PointF midPoint = new PointF();
+            float eyeDistance = 0.0f;
+            float confidence = 0.0f;
+            
+            if(facesFound > 0)
+            {
+                    for(int index=0; index<facesFound; ++index){
+                            faces[index].getMidPoint(midPoint);
+                            eyeDistance = faces[index].eyesDistance();
+                            confidence = faces[index].confidence();
+                             
+                            Log.i("FaceDetector",
+                                            "Confidence: " + confidence +
+                                            ", Eye distance: " + eyeDistance +
+                                            ", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
+                             
+                            canvas.drawRect((int)midPoint.x - eyeDistance ,
+                                                            (int)midPoint.y - eyeDistance ,
+                                                            (int)midPoint.x + eyeDistance,
+                                                            (int)midPoint.y + eyeDistance, drawPaint);
+                    }
+            }
+            
+            String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
+            
+            try {
+                    FileOutputStream fos = new FileOutputStream(filepath);
+                     
+                    bitmap565.compress(CompressFormat.JPEG, 90, fos);
+                     
+                    fos.flush();
+                    fos.close();
+            } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+            } catch (IOException e) {
+                    e.printStackTrace();
+            }
+             
+           // ImageView imageView = (ImageView)findViewById(R.id.image_view);
+             
+            Picture.setImageBitmap(bitmap565);
+    		
     	}
     	
     	//Everett: The request code for opening the gallery and selecting an image
@@ -240,83 +307,16 @@ public class MainScreen extends Activity {
                 //background Picture to that theImage
                 Bitmap theImage = BitmapFactory.decodeFile(filePath);
                 Picture.setImageBitmap(theImage);
-                FacialRecognition(theImage);
         }
     }
     
-
-	protected void FacialRecognition(Bitmap theImage)
-    {
-    	int max = 5;
-    	int width = theImage.getWidth();
-        int height = theImage.getHeight();
-         
-        FaceDetector detector = new FaceDetector(width, height,5);
-        Face[] faces = new Face[max];
-        Bitmap bitmap565 = Bitmap.createBitmap(width, height, Config.RGB_565);
-        
-        Paint ditherPaint = new Paint();
-        Paint drawPaint = new Paint();
-         
-        ditherPaint.setDither(true);
-        drawPaint.setColor(Color.YELLOW);
-        drawPaint.setStyle(Paint.Style.STROKE);
-        drawPaint.setStrokeWidth((float) 1.5);
-        
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bitmap565);
-        canvas.drawBitmap(theImage, 0, 0, ditherPaint);
-         
-        int facesFound = detector.findFaces(bitmap565, faces);
-        PointF midPoint = new PointF();
-        float eyeDistance = 0.0f;
-        float confidence = 0.0f;
-        
-        if(facesFound > 0)
-        {
-                for(int index=0; index<facesFound; ++index){
-                        faces[index].getMidPoint(midPoint);
-                        eyeDistance = faces[index].eyesDistance();
-                        confidence = faces[index].confidence();
-                         
-                        Log.i("FaceDetector",
-                                        "Confidence: " + confidence +
-                                        ", Eye distance: " + eyeDistance +
-                                        ", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-                         
-                        canvas.drawRect((int)midPoint.x - eyeDistance ,
-                                                        (int)midPoint.y - eyeDistance ,
-                                                        (int)midPoint.x + eyeDistance,
-                                                        (int)midPoint.y + eyeDistance*2, drawPaint);
-                }
-        }
-        
-        String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-        
-        try {
-                FileOutputStream fos = new FileOutputStream(filepath);
-                 
-                bitmap565.compress(CompressFormat.JPEG, 90, fos);
-                 
-                fos.flush();
-                fos.close();
-        } catch (FileNotFoundException e) {
-                e.printStackTrace();
-        } catch (IOException e) {
-                e.printStackTrace();
-        }
-         
-       // ImageView imageView = (ImageView)findViewById(R.id.image_view);
-         
-        Picture.setImageBitmap(bitmap565);
-    }
 	protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
         // Trigger the initial hide() shortly after the activity has been
         // created, to briefly hint to the user that UI controls
         // are available.
-        delayedHide(100);
+        //delayedHide(100);
     }
 
 
