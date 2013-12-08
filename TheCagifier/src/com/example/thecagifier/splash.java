@@ -25,7 +25,7 @@ public class splash extends Activity{
 	private class IntentLauncher extends Thread{
 			public void run(){
 				try {
-					Thread.sleep(5000);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

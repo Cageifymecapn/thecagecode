@@ -60,6 +60,7 @@ private final String tag = "mainscreen";
     ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
     ImageButton info = (ImageButton) findViewById(R.id.info);
     
+    
     //Leads to Info Screen
 	info.setOnClickListener(new OnClickListener() 
     {
@@ -76,6 +77,7 @@ private final String tag = "mainscreen";
 		@Override
 		public void onClick(View arg0) {
 	        takePicture();
+	        setContentView(R.layout.editor);
 		}
     });
     
@@ -100,7 +102,7 @@ private final String tag = "mainscreen";
     	if (requestCode==0)
     	{
     		takePicture();
-    		setContentView(R.layout.editor);}
+    		}
     	
 //    	if(requestCode == 0)
 //    	{
@@ -151,13 +153,8 @@ private final String tag = "mainscreen";
 	        public void onPictureTaken(byte[] data, Camera camera) {
 	          // Save the image JPEG data to the SD card
 	          FileOutputStream outStream = null;
-	          try {
-	            String path = Environment.getExternalStorageDirectory() + 
-	                          "\test.jpg";
+	          try {outStream.close();
 
-	            outStream = new FileOutputStream(path);
-	            outStream.write(data);
-	            outStream.close();
 	          } catch (FileNotFoundException e) {
 	            Log.e(tag, "File Note Found", e);
 	          } catch (IOException e) {

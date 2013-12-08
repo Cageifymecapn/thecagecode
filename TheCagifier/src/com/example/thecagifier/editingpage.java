@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import android.app.Activity;
-
 import android.util.Log;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
@@ -17,17 +16,28 @@ import android.graphics.PointF;
 import android.media.FaceDetector;
 import android.media.FaceDetector.Face;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 
-public class editorscreen extends Activity{
+
+public class editingpage extends Activity{
 ImageView Picture;
 
+public void OnCreate (Bundle savedInstanceState){
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.editor);
+}
 
-
-
+//Download Button?
+//String path = Environment.getExternalStorageDirectory() + 
+//"\test.jpg";
+//
+//outStream = new FileOutputStream(path);
+//outStream.write(data);
+//outStream.close();
 
 protected void FacialRecognition(Bitmap theImage)
 {
