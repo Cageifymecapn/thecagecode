@@ -1,384 +1,228 @@
 package com.example.thecagifier;
-import java.io.File;
+import android.app.Activity;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.ImageButton;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-import java.util.List;
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.Bitmap.Config;
+
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PointF;
+
+import android.hardware.Camera.PictureCallback;
+import android.hardware.Camera.ShutterCallback;
 //import android.hardware.Camera.Face;
-import android.media.FaceDetector;
-import android.media.FaceDetector.Face;
-import android.os.Build;
-import android.os.Bundle;
+
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
-import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.thecagifier.util.SystemUiHider;
+public class MainScreen extends Activity implements SurfaceHolder.Callback {
+TextView testView;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
- */
-public class MainScreen extends Activity {
-	
-	//Initializes the picture we're going to take
-	ImageView Picture;
-	
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
+Camera camera;
+SurfaceView surfaceView;
+SurfaceHolder surfaceHolder;
+PictureCallback rawCallback;
+ShutterCallback shutterCallback;
+PictureCallback jpegCallback;
 
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+private final String tag = "mainscreen";
 
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-    private static final boolean TOGGLE_ON_CLICK = true;
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    private SystemUiHider mSystemUiHider;
-    
-    private void dispatchTakePictureIntent(int actionCode) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(takePictureIntent, actionCode);
-    }
-    
-    public static boolean isIntentAvailable(Context context, String action) {
-        final PackageManager packageManager = context.getPackageManager();
-        final Intent intent = new Intent(action);
-        List<ResolveInfo> list =
-                packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        return list.size() > 0;
-    }
-    
-    private void handleSmallCameraPhoto(Intent intent) {
-        Bundle extras = intent.getExtras();
-        Bitmap mImageBitmap = (Bitmap) extras.get("data");
-        Picture.setImageBitmap(mImageBitmap);
-    }
-    
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//    	File storageDir = new File(
-//				Environment.getExternalStoragePublicDirectory(
-//			        Environment.DIRECTORY_PICTURES
-//			    ), "content://media/internal/images/media");
-//        String timeStamp = 
-//            new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "IMG_" + timeStamp + "_";
-//        File image = File.createTempFile(
-//            imageFileName, 
-//            ".jpg", 
-//            storageDir
-//        );
-//        String mCurrentPhotoPath = image.getAbsolutePath();
-//        return image;
-//    }
-//    
-
-    public String getPath(Uri uri) {
-        // just some safety built in 
-        if( uri == null ) {
-            // TODO perform some logging or show user feedback
-            return null;
-        }
-        // try to retrieve the image from the media store first
-        // this will only work for images selected from gallery
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = managedQuery(uri, projection, null, null, null);
-        if( cursor != null ){
-            int column_index = cursor
-            .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        }
-        // this is our fallback here
-        return uri.getPath();
-    }
-    
-    
-    private void galleryAddPic(Intent data) throws IOException{
-    	//Create an image file name
-        String timeStamp = 
-            new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
-        
-    	//Sets the storage directory
-        File storageDir = new File(
-				Environment.getExternalStoragePublicDirectory(
-			        Environment.DIRECTORY_PICTURES
-			    ), imageFileName);
-
-        File image = File.createTempFile(
-                imageFileName, 
-                ".jpg", 
-                storageDir
-            );
-        Bitmap theImage = (Bitmap) data.getExtras().get("data");
-        MediaStore.Images.Media.insertImage(getContentResolver(), theImage, image.getName() , "Made by Cagifier");
-
-        /*
-        //Append the file name to the intent
-		File f = image;
-        Uri contentUri = Uri.fromFile(f);
-        data.putExtra(MediaStore.EXTRA_OUTPUT, contentUri);
-        
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);*/
-    }
-    
-
-
-    @SuppressLint("CutPasteId") 
-    
+    /** Called when the activity is first created. */
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-    	
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.mainscreen);
-        Picture = (ImageView) findViewById(R.id.imageView); // Austin : set image in background to photo
-
-        //This where the various buttons are assigned to buttons on the UI 
-        ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
-        ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
-        ImageButton info = (ImageButton) findViewById(R.id.info);
         
-		info.setOnClickListener(new OnClickListener() 
-        {
-			@Override
-			public void onClick(View arg0) {
-				setContentView(R.layout.info);
-			}
-        });
+        surfaceView = (SurfaceView)findViewById(R.id.surfaceView1);
+        surfaceHolder = surfaceView.getHolder();
         
-
-        //Response to the takepicture button being pushed
-        takephoto.setOnClickListener(new OnClickListener() 
-        {
-			@Override
-			public void onClick(View arg0) {
-				//Android has built-in things for taking pictures
-				//Intent TakePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
-				//startActivityForResult(TakePictureIntent, 0);	
-				dispatchTakePictureIntent(0);
-//				Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); // Austin : Sets the action to take a picture
-//				startActivityForResult(intent, 0);		
-
-			}
-        });
         
-        //Everett: Opens the gallery when Gallery button is pressed. 
-        //Got help for the Intent from http://stackoverflow.com/questions/18416122/open-gallery-app-in-android
-        openGallery.setOnClickListener(new OnClickListener()
-        {
-        	@Override
-        	public void onClick(View arg0) {
-        		//Android has something to open the gallery already
-        		Intent galleryIntent = new Intent(Intent.ACTION_VIEW, 
-        				Uri.parse("content://media/internal/images/media"));
-        		startActivity(galleryIntent);
-        		startActivityForResult(galleryIntent, 1);
-        	}
-        });
-       
-        final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content_controls);
-
-        // Set up an instance of SystemUiHider to control the system UI for
-        // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
-        mSystemUiHider.setup();
-        mSystemUiHider.show();
-
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
-        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-    }
-
-    //Written by Austin
+        //pushed camera frames to screen
+        surfaceHolder.addCallback(this);
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        //Makes camera preview automaticallly come up on surface view
+        surfaceView.setVisibility(0);
+        
+    ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
+    ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
+    ImageButton info = (ImageButton) findViewById(R.id.info);
+    
+    //Leads to Info Screen
+	info.setOnClickListener(new OnClickListener() 
+    {
+		@Override
+		public void onClick(View arg0) {
+			setContentView(R.layout.info);
+		}
+    });
+    
+    
+    //Response to the takepicture button being pushed
+    takephoto.setOnClickListener(new OnClickListener() 
+    {
+		@Override
+		public void onClick(View arg0) {
+	        takePicture();
+		}
+    });
+    
+    //Everett: Opens the gallery when Gallery button is pressed. 
+    //Got help for the Intent from http://stackoverflow.com/questions/18416122/open-gallery-app-in-android
+    openGallery.setOnClickListener(new OnClickListener()
+    {
+    	@Override
+    	public void onClick(View arg0) {
+    		//Android has something to open the gallery already
+    		Intent galleryIntent = new Intent(Intent.ACTION_VIEW, 
+    				Uri.parse("content://media/internal/images/media"));
+    		startActivity(galleryIntent);
+    		startActivityForResult(galleryIntent, 1);
+    	}
+    });
+}
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {    	
-    	if(requestCode == 0)
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {    
+    	if (requestCode==0)
     	{
-    		Bitmap theImage = (Bitmap) data.getExtras().get("data"); // Austin : Set Background to the photo
-    		Picture.setImageBitmap(theImage);
-    		try {
-				galleryAddPic(data);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		
-    		
-    		FacialRecognition(theImage);
-    	}
+    		takePicture();
+    		setContentView(R.layout.editor);}
+    	
+//    	if(requestCode == 0)
+//    	{
+//    		Bitmap theImage = (Bitmap) data.getExtras().get("data"); // Austin : Set Background to the photo
+//    		Picture.setImageBitmap(theImage);
+//    		try {
+//				galleryAddPic(data);
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//    		FacialRecognition(theImage);
+//    	}
     	
     	//Everett: The request code for opening the gallery and selecting an image
     	if(requestCode == 1)
     	{
                 Uri selectedImageUri = data.getData();
-                selectedImagePath = getPath(selectedImageUri);
+                String selectedImagePath = getPath(selectedImageUri);
 
                 //sets theImage to the one of the selected path, and then sets the 
                 //background Picture to that theImage
                 Bitmap theImage = BitmapFactory.decodeFile(selectedImagePath);
-                Picture.setImageBitmap(theImage);
-                FacialRecognition(theImage);
-    	}
-    }
-}
+//                Picture.setImageBitmap(theImage);
+//                FacialRecognition(theImage);
+    	}   	
+
+    };
     
+    
+    @Override
+	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
+		// TODO Auto-generated method stub
+		
+		shutterCallback = new ShutterCallback() {
+	        public void onShutter() {
+	          // TODO Do something when the shutter closes.
+	        }
+	      };
 
-	protected void FacialRecognition(Bitmap theImage)
-    {
-    	int max = 5;
-    	int width = theImage.getWidth();
-        int height = theImage.getHeight();
-         
-        FaceDetector detector = new FaceDetector(width, height,5);
-        Face[] faces = new Face[max];
-        Bitmap bitmap565 = Bitmap.createBitmap(width, height, Config.RGB_565);
-        
-        Paint ditherPaint = new Paint();
-        Paint drawPaint = new Paint();
-         
-        ditherPaint.setDither(true);
-        drawPaint.setColor(Color.YELLOW);
-        drawPaint.setStyle(Paint.Style.STROKE);
-        drawPaint.setStrokeWidth((float) 1.5);
-        
-        Canvas canvas = new Canvas();
-        canvas.setBitmap(bitmap565);
-        canvas.drawBitmap(theImage, 0, 0, ditherPaint);
-         
-        int facesFound = detector.findFaces(bitmap565, faces);
-        PointF midPoint = new PointF();
-        float eyeDistance = 0.0f;
-        float confidence = 0.0f;
-        
-        if(facesFound > 0)
-        {
-                for(int index=0; index<facesFound; ++index){
-                        faces[index].getMidPoint(midPoint);
-                        eyeDistance = faces[index].eyesDistance();
-                        confidence = faces[index].confidence();
-                         
-                        Log.i("FaceDetector",
-                                        "Confidence: " + confidence +
-                                        ", Eye distance: " + eyeDistance +
-                                        ", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-                         
-                        canvas.drawRect((int)midPoint.x - eyeDistance ,
-                                                        (int)midPoint.y - eyeDistance ,
-                                                        (int)midPoint.x + eyeDistance,
-                                                        (int)midPoint.y + eyeDistance*2, drawPaint);
-                }
-        }
-        
-        String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-        
-        try {
-                FileOutputStream fos = new FileOutputStream(filepath);
-                 
-                bitmap565.compress(CompressFormat.JPEG, 90, fos);
-                 
-                fos.flush();
-                fos.close();
-        } catch (FileNotFoundException e) {
-                e.printStackTrace();
-        } catch (IOException e) {
-                e.printStackTrace();
-        }
-         
-       // ImageView imageView = (ImageView)findViewById(R.id.image_view);
-         
-        Picture.setImageBitmap(bitmap565);
+	       rawCallback = new PictureCallback() {
+	        public void onPictureTaken(byte[] data, Camera camera) {
+	          // TODO Do something with the image RAW data.
+	        }
+	      };
+
+	       jpegCallback = new PictureCallback() {
+	        public void onPictureTaken(byte[] data, Camera camera) {
+	          // Save the image JPEG data to the SD card
+	          FileOutputStream outStream = null;
+	          try {
+	            String path = Environment.getExternalStorageDirectory() + 
+	                          "\test.jpg";
+
+	            outStream = new FileOutputStream(path);
+	            outStream.write(data);
+	            outStream.close();
+	          } catch (FileNotFoundException e) {
+	            Log.e(tag, "File Note Found", e);
+	          } catch (IOException e) {
+	            Log.e(tag, "IO Exception", e);
+	          }
+	        }
+	        
+	      };
+	      
+	}
+
+    private void takePicture() {
+        camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+      }
+	@Override
+	public void surfaceCreated(SurfaceHolder surfaceholder) {
+		try{
+		     camera = Camera.open();
+		     }catch(RuntimeException e){
+		     Log.e(tag, "init_camera: " + e);
+		     return;
+		     }
+		     Camera.Parameters param;
+		     param = camera.getParameters();
+		     //modify parameter
+		     param.setPreviewFrameRate(20);
+		     param.setPreviewSize(1280, 720);
+		     camera.setDisplayOrientation(270);
+		     camera.setParameters(param);
+		     try {
+		camera.setPreviewDisplay(surfaceHolder);
+		camera.startPreview();
+		} catch (Exception e) {
+		Log.e(tag, "init_camera: " + e);
+		return;
+		}
+		  }
+	
+
+	@Override
+	public void surfaceDestroyed(SurfaceHolder surfaceholder) {
+		// TODO Auto-generated method stub
+		camera.stopPreview();
+		camera.release();
+		camera = null;
+	}
+
+
+public String getPath(Uri uri) {
+    // just some safety built in 
+    if( uri == null ) {
+        // TODO perform some logging or show user feedback
+        return null;
     }
-	protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
-        delayedHide(100);
+    // try to retrieve the image from the media store first
+    // this will only work for images selected from gallery
+    String[] projection = { MediaStore.Images.Media.DATA };
+    Cursor cursor = managedQuery(uri, projection, null, null, null);
+    if( cursor != null ){
+        int column_index = cursor
+        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
-
-
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
-    View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (AUTO_HIDE) {
-                delayedHide(AUTO_HIDE_DELAY_MILLIS);
-            }
-            return false;
-        }
-    };
-
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mSystemUiHider.hide();
-        }
-    };
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
+    // this is our fallback here
+    return uri.getPath();
+}
 }
