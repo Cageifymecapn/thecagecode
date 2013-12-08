@@ -29,6 +29,13 @@ ImageView Picture;
 public void OnCreate (Bundle savedInstanceState){
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.editor);
+	
+	//Everett: I'm not sure this works!!
+	ImageView editorImageView = (ImageView) findViewById(R.id.imageView);
+	editorImageView.buildDrawingCache();
+	
+	Bitmap imageViewBitmap = editorImageView.getDrawingCache();
+	FacialRecognition(imageViewBitmap);
 }
 
 //Download Button?
