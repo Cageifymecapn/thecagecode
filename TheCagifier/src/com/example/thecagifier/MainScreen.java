@@ -117,22 +117,26 @@ public class MainScreen extends Activity {
 //    }
 //    
     private void galleryAddPic(Intent data) throws IOException{
+    	//Create an image file name
+        String timeStamp = 
+            new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        
     	//Sets the storage directory
         File storageDir = new File(
 				Environment.getExternalStoragePublicDirectory(
 			        Environment.DIRECTORY_PICTURES
-			    ), "content://media/internal/images/media");
-        
-        //Create an image file name
-        String timeStamp = 
-            new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
+			    ), imageFileName);
+
         File image = File.createTempFile(
-            imageFileName, 
-            ".jpg", 
-            storageDir
-        );
-        
+                imageFileName, 
+                ".jpg", 
+                storageDir
+            );
+        Bitmap theImage = (Bitmap) data.getExtras().get("data");
+        MediaStore.Images.Media.insertImage(getContentResolver(), theImage, image.getName() , "Made by Cagifier");
+
+        /*
         //Append the file name to the intent
 		File f = image;
         Uri contentUri = Uri.fromFile(f);
@@ -140,7 +144,7 @@ public class MainScreen extends Activity {
         
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
+        this.sendBroadcast(mediaScanIntent);*/
     }
     
 
