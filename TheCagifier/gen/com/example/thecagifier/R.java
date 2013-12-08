@@ -33,30 +33,49 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int upload=0x7f020008;
     }
     public static final class id {
-        public static final int fullscreen_content_controls=0x7f070003;
-        public static final int gallery=0x7f070005;
-        public static final int imageButton1=0x7f070000;
-        public static final int imageButton2=0x7f070001;
-        public static final int imageButton3=0x7f070002;
-        public static final int imageView=0x7f070007;
-        public static final int info=0x7f070006;
-        public static final int takepicture=0x7f070004;
+        public static final int GridLayout1=0x7f070004;
+        public static final int fullscreen_content_controls=0x7f070010;
+        public static final int gallery=0x7f070012;
+        public static final int imageButton1=0x7f070001;
+        public static final int imageButton2=0x7f070002;
+        public static final int imageButton3=0x7f070003;
+        public static final int imageView=0x7f070000;
+        public static final int imageView1=0x7f070006;
+        public static final int imageView2=0x7f070007;
+        public static final int imageView3=0x7f070008;
+        public static final int imageView4=0x7f070009;
+        public static final int imageView5=0x7f07000a;
+        public static final int info=0x7f070013;
+        public static final int takepicture=0x7f070011;
+        public static final int textView1=0x7f07000b;
+        public static final int textView2=0x7f07000e;
+        public static final int textView3=0x7f07000f;
+        public static final int textView4=0x7f07000c;
+        public static final int textView5=0x7f07000d;
+        public static final int textView6=0x7f070005;
     }
     public static final class layout {
         public static final int editor=0x7f030000;
-        public static final int mainscreen=0x7f030001;
+        public static final int info=0x7f030001;
+        public static final int mainscreen=0x7f030002;
     }
     public static final class string {
+        public static final int Downloadstatement=0x7f05000b;
+        public static final int INFORMATION=0x7f050010;
         public static final int Undo=0x7f050008;
         public static final int android_hardware_camera_autofocus=0x7f050007;
         public static final int app_name=0x7f050001;
         public static final int download=0x7f050005;
         public static final int flip=0x7f050006;
+        public static final int flipstatement=0x7f05000e;
         public static final int gallery=0x7f05000a;
         public static final int hello=0x7f050000;
         public static final int imageView=0x7f050009;
         public static final int info=0x7f050004;
+        public static final int infostatement=0x7f05000d;
         public static final int snap=0x7f050002;
+        public static final int takepicstatement=0x7f05000c;
+        public static final int uploadstatement=0x7f05000f;
         public static final int uploadupload=0x7f050003;
     }
     public static final class style {

@@ -94,7 +94,9 @@ public class MainScreen extends Activity {
         Bitmap mImageBitmap = (Bitmap) extras.get("data");
         Picture.setImageBitmap(mImageBitmap);
     }
-
+   
+    
+   
     @SuppressLint("CutPasteId") 
     
     @Override
@@ -142,9 +144,11 @@ public class MainScreen extends Activity {
         {
 			@Override
 			public void onClick(View arg0) {
-				Intent goToInfoPage=new Intent();
+				setContentView(R.layout.info);
 			}
         });
+        
+       
         
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         final View contentView = controlsView;
