@@ -9,19 +9,14 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.content.Intent;
 
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-
 import android.graphics.BitmapFactory;
 
 import android.hardware.Camera.PictureCallback;
@@ -44,11 +39,8 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	ShutterCallback shutterCallback;
 	Camera.PictureCallback jpegCallback;
 	PictureCallback postviewCallback;
-	int currentCameraId=Camera.CameraInfo.CAMERA_FACING_BACK;
 	
 	private final String tag = "mainscreen";
-
-	
 	
 
     /** Called when the activity is first created. */
@@ -71,7 +63,6 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
         ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         ImageButton info = (ImageButton) findViewById(R.id.info);
-        ImageButton switchcamera=(ImageButton)findViewById(R.id.imageButton1);
         
     
 	    //Leads to Info Screen
@@ -79,7 +70,13 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    {
 			@Override
 			public void onClick(View arg0) {
-				setContentView(R.layout.info);
+				//IT WAS NICKS FAULT (jk Nick)
+//				setContentView(R.layout.info);
+				//^^^This just changes the layout of the current activity
+				//It DOESN'T actually change the activity. 
+				//That's why the other screens' onCreates aren't working right
+				//The code below DOES, however
+				startActivity(new Intent(MainScreen.this, info.class));
 			}
 	    });
 		  
@@ -89,10 +86,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 			@Override
 			public void onClick(View arg0) {
 		        camera.takePicture(null, null, jpegCallback);
-//		        Bitmap pictureTaken = BitmapFactory.decodeFile("content://media/internal/images/test1.jpg");
-//	            ImageView editorPicture = (ImageView) findViewById(R.id.imageView);
-//	            editorPicture.setImageBitmap(pictureTaken);  
-//		        setContentView(R.layout.editor);
+		        
 			}
 	    });
 	    
@@ -108,33 +102,6 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    		startActivityForResult(galleryIntent, 1);
 	    	}
 	    });
-	    switchcamera.setOnClickListener(new OnClickListener() 
-	    {
-			@Override
-			public void onClick(View arg0) {
-				
-			    //NB: if you don't release the current camera before switching, you app will crash
-			    camera.release();
-
-			    //swap the id of the camera to be used
-			    if(currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK){
-			        currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
-			    }
-			    else {
-			        currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-			    }
-			    camera = Camera.open(currentCameraId);
-			    
-			    try {
-			        //this step is critical or preview on new camera will no know where to render to
-			        camera.setPreviewDisplay(surfaceHolder);
-			    } catch (IOException e) {
-			        e.printStackTrace();
-			    }
-			    camera.startPreview();
-			}
-	    });
-	    
     }
 
     @Override
@@ -161,82 +128,57 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
     	//Everett: The request code for opening the gallery and selecting an image
     	if(requestCode == 1)
     	{
-    		setContentView(R.layout.editor);
     		Uri selectedImageUri = data.getData();
             String selectedImagePath = getPath(selectedImageUri);
             
-            //sets theImage to the one of the selected path, and then sets the 
-            //background Picture to that theImage
-            Bitmap selectedImage = BitmapFactory.decodeFile(selectedImagePath);
-            ImageView editorPicture = (ImageView) findViewById(R.id.imageView);
-            editorPicture.setImageBitmap(selectedImage);                          
+            //This doesn't quite work
+            //startActivity(new Intent(MainScreen.this, editingpage.class));
+            //Need to send info with new Intent
+            //Intent changeActivity = new Intent(MainScreen.this, editingpage.class);
+            //changeActivity.putExtra("ImageBitmap", selectedImage);
+            Intent changeActivity = new Intent(MainScreen.this, editingpage.class);
+            changeActivity.putExtra("galleryImageUriString", selectedImagePath);
+            MainScreen.this.startActivity(changeActivity);
+            
+            
     	}
-    	
     	if(requestCode == 2)
     	{
     		//This adds the photo to the gallery
     	}
     };
 
-    private void galleryAddPic(Intent data) throws IOException{
-	//Create an image file name
-    String timeStamp = 
-        new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-    String imageFileName = "IMG_" + timeStamp + "_";
-    
-	//Sets the storage directory
-    File storageDir = new File(
-		Environment.getExternalStoragePublicDirectory(
-		        Environment.DIRECTORY_PICTURES
-		    ), imageFileName);
-
-    File file = File.createTempFile(
-            imageFileName, 
-            ".jpg", 
-            storageDir
-        );
-    if(!file.exists())
-    	file.createNewFile();
-    //Append the file name to the intent
-	String fileString = file.toString();
-    Uri contentUri = Uri.fromFile(file);
-    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
-    startActivityForResult(mediaScanIntent, 2);
+//    private void galleryAddPic(Intent data) throws IOException{
+//	//Create an image file name
+//    String timeStamp = 
+//        new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//    String imageFileName = "IMG_" + timeStamp + "_";
+//    
+//	//Sets the storage directory
+//    File storageDir = new File(
+//		Environment.getExternalStoragePublicDirectory(
+//		        Environment.DIRECTORY_PICTURES
+//		    ), imageFileName);
+//
+//    File file = File.createTempFile(
+//            imageFileName, 
+//            ".jpg", 
+//            storageDir
+//        );
+//    if(!file.exists())
+//    	file.createNewFile();
+//    //Append the file name to the intent
+//	String fileString = file.toString();
+//    Uri contentUri = Uri.fromFile(file);
+//    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
+//    startActivityForResult(mediaScanIntent, 2);
 
 //  Bitmap theImage = (Bitmap) data.getExtras().get("data");
 //  MediaStore.Images.Media.insertImage(getContentResolver(), theImage, file.getName() , "Made by Cagifier");
 
-  }
 
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
-		// TODO Auto-generated method stub
-//		shutterCallback = new ShutterCallback() {
-//			public void onShutter() {
-//				// TODO Do something when the shutter closes.
-//	        }
-//		};
-		
-//		rawCallback = new PictureCallback() {
-//	        public void onPictureTaken(byte[] data, Camera camera) {
-////	        	Bitmap pictureTaken = BitmapFactory.decodeByteArray(data, 0, data.length);
-////	 	        ImageView editorPicture = (ImageView) findViewById(R.id.imageView);
-////	 	        editorPicture.setImageBitmap(pictureTaken);
-////	        	//Do something with the image RAW data.
-////	        	FileOutputStream outStream = null;
-////	        	try {
-////	        		String path = Environment.getExternalStorageDirectory() +
-////	        				"/test.jpg";
-////	        		outStream = new FileOutputStream(path);
-////	        		outStream.write(data);
-////	        		outStream.close();
-////	        	} catch (FileNotFoundException e) {
-////	        		Log.e(tag, "File Note Found", e);
-////	        	} catch (IOException e) {
-////	        		Log.e(tag, "IO Exception", e);
-////	        	}
-//	        }
-//		};
 	     jpegCallback = new PictureCallback() {
 	    	 public void onPictureTaken(byte[] data, Camera camera) {
 	    		 //Save the image JPEG data to the SD card
@@ -248,18 +190,16 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    			 outStream.write(data);
 	    			 outStream.close();
 	    			 
-	    			 setContentView(R.layout.editor);
-	    			 Bitmap myBitmap = BitmapFactory.decodeFile(path);
-	    			 
-	    			 ImageView myImage = (ImageView) findViewById(R.id.imageView);
-	    			 myImage.setImageBitmap(myBitmap);
-
-	    			 
+	    			 //We send the path to the byte[] data
+	    			 Intent changeActivity = new Intent(MainScreen.this, editingpage.class);
+	    	         changeActivity.putExtra("takenImageUriString", path);
+	    	         MainScreen.this.startActivity(changeActivity);	    			 
 	    		 } catch (FileNotFoundException e) {
 	    			 Log.e(tag, "File Note Found", e);
 	    		 } catch (IOException e) {
 	    			 Log.e(tag, "IO Exception", e);
 	    		 }
+	    		 //startActivity(new Intent(MainScreen.this, editingpage.class));
 	    	 }
 	     };
 	     postviewCallback = new PictureCallback() {
@@ -283,6 +223,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    editorPicture.setImageBitmap(pictureTaken);	 
         setContentView(R.layout.editor);
     }
+    
 	@Override
 	public void surfaceCreated(SurfaceHolder surfaceholder) {
 		try{
