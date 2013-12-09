@@ -37,6 +37,18 @@ public void OnCreate (Bundle savedInstanceState){
 	Bitmap imageViewBitmap = editorImageView.getDrawingCache();
 	FacialRecognition(imageViewBitmap);
 }
+    ImageButton Undo=(ImageButton) findViewById(R.id.imageButton3);
+    
+    
+    
+    Undo.setOnClickListener(new OnClickListener() 
+    {
+		@Override
+		public void onClick(View arg0) {
+			setContentView(R.layout.mainscreen);
+		}
+    });
+}
 
 //Download Button?
 //String path = Environment.getExternalStorageDirectory() + 
