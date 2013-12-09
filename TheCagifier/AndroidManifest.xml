@@ -16,7 +16,8 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="thecagifier"
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+         android:screenOrientation="portrait">
                 <activity
                     android:screenOrientation="portrait"
             android:name=".splash"
