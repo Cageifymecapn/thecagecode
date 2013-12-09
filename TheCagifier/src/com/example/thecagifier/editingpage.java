@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
@@ -32,6 +33,7 @@ import android.graphics.Bitmap.Config;
 
 
 public class editingpage extends Activity{
+	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editor);
@@ -48,6 +50,7 @@ public class editingpage extends Activity{
 	        
 			//sets the background Picture to that sentImageBitmap
 	        editorImageView.setImageBitmap(sentImageBitmap);
+	        FacialRecognition(sentImageBitmap, editorImageView);
 		}
 		else if(intent.getStringExtra("takenImageUriString") != null)
 		{
@@ -61,12 +64,16 @@ public class editingpage extends Activity{
 			Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
 			
 	        editorImageView.setImageBitmap(rotatedBitmap);
+	        FacialRecognition(rotatedBitmap, editorImageView);
 		}
 		
 		editorImageView.setDrawingCacheEnabled(true);
 		editorImageView.buildDrawingCache();
-//		
-//		Bitmap imageViewBitmap = editorImageView.getDrawingCache();
+		
+		
+			
+				
+		//Bitmap imageViewBitmap = editorImageView.getDrawingCache();
 		//FacialRecognition(imageViewBitmap, editorImageView);
         
         ImageButton undo = (ImageButton) findViewById(R.id.imageButton3);
@@ -134,6 +141,7 @@ public class editingpage extends Activity{
 	    PointF midPoint = new PointF();
 	    float eyeDistance = 0.0f;
 	    float confidence = 0.0f;
+	    float x = 1.6f;
 	    
 	    if(facesFound > 0)
 	    { 	
@@ -146,10 +154,10 @@ public class editingpage extends Activity{
 	            		"Confidence: " + confidence +
 	            		", Eye distance: " + eyeDistance +
 	            		", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-	            canvas.drawRect((int)midPoint.x - eyeDistance ,
-	            		(int)midPoint.y - eyeDistance ,
-	            		(int)midPoint.x + eyeDistance,
-	            		(int)midPoint.y + eyeDistance*2, drawPaint);
+	            canvas.drawRect((float)midPoint.x - eyeDistance ,
+	            		(float)midPoint.y - eyeDistance ,
+	            		(float)midPoint.x + eyeDistance,
+	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
 	        }
 	    }
 	    
