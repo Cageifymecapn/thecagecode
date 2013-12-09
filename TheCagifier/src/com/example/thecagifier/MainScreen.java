@@ -44,8 +44,11 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	ShutterCallback shutterCallback;
 	Camera.PictureCallback jpegCallback;
 	PictureCallback postviewCallback;
+	int currentCameraId=Camera.CameraInfo.CAMERA_FACING_BACK;
 	
 	private final String tag = "mainscreen";
+
+	
 	
 
     /** Called when the activity is first created. */
@@ -68,6 +71,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
         ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         ImageButton info = (ImageButton) findViewById(R.id.info);
+        ImageButton switchcamera=(ImageButton)findViewById(R.id.imageButton1);
         
     
 	    //Leads to Info Screen
@@ -104,6 +108,33 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    		startActivityForResult(galleryIntent, 1);
 	    	}
 	    });
+	    switchcamera.setOnClickListener(new OnClickListener() 
+	    {
+			@Override
+			public void onClick(View arg0) {
+				
+			    //NB: if you don't release the current camera before switching, you app will crash
+			    camera.release();
+
+			    //swap the id of the camera to be used
+			    if(currentCameraId == Camera.CameraInfo.CAMERA_FACING_BACK){
+			        currentCameraId = Camera.CameraInfo.CAMERA_FACING_FRONT;
+			    }
+			    else {
+			        currentCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
+			    }
+			    camera = Camera.open(currentCameraId);
+			    
+			    try {
+			        //this step is critical or preview on new camera will no know where to render to
+			        camera.setPreviewDisplay(surfaceHolder);
+			    } catch (IOException e) {
+			        e.printStackTrace();
+			    }
+			    camera.startPreview();
+			}
+	    });
+	    
     }
 
     @Override
