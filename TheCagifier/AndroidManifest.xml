@@ -7,8 +7,8 @@
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
-<uses-feature android:name="android.hardware.camera" /> 
-<uses-feature android:name="@string/android_hardware_camera_autofocus" /> 
+<uses-feature android:name="android.hardware.camera" />
+<uses-feature android:name="@string/android_hardware_camera_autofocus" />
 <uses-permission android:name="android.permission.CAMERA"></uses-permission>
  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE">
 </uses-permission> <!-- Allows access to the flashlight --> <uses-permission android:name="android.permission.FLASHLIGHT"/>
@@ -37,27 +37,27 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-<!--                 <category android:name="android.intent.category.DEFAULT" /> -->
+<!-- <category android:name="android.intent.category.DEFAULT" /> -->
             </intent-filter>
         </activity>
-        <activity 
+        <activity
             android:name=".info"
                     android:screenOrientation="portrait"
             android:label="The Cagifier"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
-<!--             </intent-filter> -->
+<!-- <intent-filter> -->
+<!-- <action android:name="android.intent.action.MAIN" /> -->
+<!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".editingpage"
                                 android:screenOrientation="portrait"
-            android:label="The Cagifier" 
+            android:label="The Cagifier"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-<!--             <intent-filter> -->
-<!--                 <action android:name="android.intent.action.MAIN" /> -->
-<!--             </intent-filter> -->
+<!-- <intent-filter> -->
+<!-- <action android:name="android.intent.action.MAIN" /> -->
+<!-- </intent-filter> -->
         </activity>
     </application>
 

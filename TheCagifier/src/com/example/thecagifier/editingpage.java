@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,95 +38,95 @@ import android.graphics.drawable.Drawable;
 
 
 public class editingpage extends Activity{
-	
+
 	Bitmap facemap;
-	
+
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editor);
-		
+
 		//This gets the intent sent to create this Activity
 		Intent intent = getIntent();
 		String sentImagePath;
 		Bitmap sentImageBitmap;
-		
-	
+
+
 		final ImageView editorImageView = (ImageView) findViewById(R.id.imageView);
 		if(intent.getStringExtra("galleryImageUriString") != null)
 		{
 			sentImagePath = intent.getStringExtra("galleryImageUriString");
 			sentImageBitmap = BitmapFactory.decodeFile(sentImagePath);
-	        
+
 			//sets the background Picture to that sentImageBitmap
 	        editorImageView.setImageBitmap(sentImageBitmap);
 	        facemap = sentImageBitmap;
 	        FacialRecognition(sentImageBitmap, editorImageView);
-	        
+
 		}
 		else if(intent.getStringExtra("takenImageUriString") != null)
 		{
 			sentImagePath = intent.getStringExtra("takenImageUriString");
 			sentImageBitmap = BitmapFactory.decodeFile(sentImagePath);
-			
+
 			//This rotates the Bitmap 90 degrees
 			Matrix matrix = new Matrix();
 			matrix.postRotate(-90);
 			Bitmap scaledBitmap = Bitmap.createScaledBitmap(sentImageBitmap,sentImageBitmap.getWidth(),sentImageBitmap.getHeight(), true);
 			Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
-			
+
 	        editorImageView.setImageBitmap(rotatedBitmap);
 	        facemap = rotatedBitmap;
 	        FacialRecognition(rotatedBitmap, editorImageView);
 		}
-		
+
 		editorImageView.setDrawingCacheEnabled(true);
 		editorImageView.buildDrawingCache();
-		
-		
-		
-			
-				
+
+
+
+
+
 		//Bitmap imageViewBitmap = editorImageView.getDrawingCache();
 		//FacialRecognition(imageViewBitmap, editorImageView);
-        
+
         ImageButton undo = (ImageButton) findViewById(R.id.imageButton3);
         ImageButton download = (ImageButton) findViewById(R.id.imageButton1);
-        
+
         editorImageView.setOnTouchListener(new OnTouchListener()
         {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				
+
 				int x = (int)event.getX();
 			    int y = (int)event.getY();
-			    
+
 				int action = event.getAction() & MotionEvent.ACTION_MASK;
 	            switch (action) {
 	            case MotionEvent.ACTION_UP: {
 	                int count = event.getPointerCount();
 	                Log.v("count >>", count + "");
 	                if (count == 2) {
-	                	
+
 	                		FaceDetector detector = new FaceDetector(facemap.getWidth(), facemap.getHeight(),5);
 	                		Face[] faces = new Face[5];
 	                		Bitmap bitmap565 = Bitmap.createBitmap(facemap.getWidth(), facemap.getHeight(), Config.RGB_565);
 	                		Drawable Face1 = getResources().getDrawable(R.drawable.cage1);
 	                		Canvas facecanvas = new Canvas();
 	                	    facecanvas.setBitmap(bitmap565);
-	                	    
+
 	                	    int facesFound = detector.findFaces(bitmap565, faces);
 	                	    PointF midPoint = new PointF();
 	                	    float eyeDistance = 0.0f;
 	                	    float confidence = 0.0f;
-	                	    
+
 	                	    if(facesFound > 0)
-	                	    { 	
+	                	    {
 	                	        for(int index=0; index<facesFound; ++index){
 	                	            faces[index].getMidPoint(midPoint);
 	                	            eyeDistance = faces[index].eyesDistance();
 	                	            confidence = faces[index].confidence();
-	                	             
+
 	                	            Log.i("FaceDetector",
 	                	            		"Confidence: " + confidence +
 	                	            		", Eye distance: " + eyeDistance +
@@ -137,7 +138,7 @@ public class editingpage extends Activity{
 	                	            	//	(float)midPoint.y + eyeDistance*(x), drawPaint);
 	                	        }
 	                	    }
-	                	    
+
 	                	    editorImageView.setImageBitmap(facemap);
 	                    }
 	                else
@@ -146,12 +147,12 @@ public class editingpage extends Activity{
 	                }
 	                break;
 	            }
-	            }       
+	            }
 	            return true;
-	            
+
 			}
        });
-        
+
         undo.setOnClickListener(new OnClickListener()
         {
 			@Override
@@ -161,21 +162,21 @@ public class editingpage extends Activity{
 
 			}
         });
-        
+
         download.setOnClickListener(new OnClickListener()
         {
 			@Override
 			public void onClick(View arg0) {
-				
+
 				BitmapDrawable drawable = (BitmapDrawable) editorImageView.getDrawable();
 			    Bitmap image_to_save = drawable.getBitmap();
 			    String root = Environment.getExternalStorageDirectory().toString();
-			    File myDir = new File(root + "/The_Cagifier");    
+			    File myDir = new File(root + "/The_Cagifier");
 			    myDir.mkdirs();
 			    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 				String imageFileName = "IMG_" + timeStamp + ".jpg";
 			    File image=new File(myDir,imageFileName);
-			    
+
 			    boolean success = false;
 
 			    // Encode the file as a JPG image.
@@ -183,7 +184,7 @@ public class editingpage extends Activity{
 			    try {
 
 			        outStream = new FileOutputStream(image);
-			        image_to_save.compress(Bitmap.CompressFormat.JPEG, 100, outStream); 
+			        image_to_save.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
 			        /* 100 to keep full quality of the image */
 
 			        outStream.flush();
@@ -194,37 +195,20 @@ public class editingpage extends Activity{
 			    } catch (IOException e) {
 			        e.printStackTrace();
 			    }
-			    if (success) 
+			    if (success)
 			    {
 			        Toast.makeText(getApplicationContext(), "Cagification Saved",
 			                Toast.LENGTH_LONG).show();
-			    } else 
+			    } else
 			    {
 			        Toast.makeText(getApplicationContext(),
 			                "Error during image saving", Toast.LENGTH_LONG).show();
 			    }
 			    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
 			            Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-				/*final Bitmap savedImage = editorImageView.getDrawingCache();
-				
-				
-				
-			    String path2 = "content://media/internal/images/media" + ".jpg";
-			    //String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-			    
-			    try {
-			            FileOutputStream fos = new FileOutputStream(path2);
-			            savedImage.compress(CompressFormat.JPEG, 90, fos);
-			            fos.flush();
-			            fos.close();
-			    } catch (FileNotFoundException e) {
-			            e.printStackTrace();
-			    } catch (IOException e) {
-			            e.printStackTrace();
-			    }*/
-				
-				
-				
+
+
+
 //				String timeStamp = "TIME"; //new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 //				String imageFileName = "IMG_" + timeStamp + "_";
 //				File storageDir = new File(imageFileName);
@@ -246,50 +230,89 @@ public class editingpage extends Activity{
 			}
         });
 	}
-		
+
 	protected void FacialRecognition(Bitmap theImage, ImageView Picture)
 	{
 		int max = 5;
 		int width = theImage.getWidth();
 	    int height = theImage.getHeight();
-	     
+
 	    FaceDetector detector = new FaceDetector(width, height,5);
 	    Face[] faces = new Face[max];
 	    Bitmap bitmap565 = Bitmap.createBitmap(width, height, Config.RGB_565);
-	    
+
 	    Paint ditherPaint = new Paint();
 	    Paint drawPaint = new Paint();
-	     
+
 	    ditherPaint.setDither(true);
 	    drawPaint.setColor(Color.YELLOW);
 	    drawPaint.setStyle(Paint.Style.STROKE);
 	    drawPaint.setStrokeWidth((float) 1.5);
-	    
+
 	    Canvas canvas = new Canvas();
 	    canvas.setBitmap(bitmap565);
 	    canvas.drawBitmap(theImage, 0, 0, ditherPaint);
-	     
+
 	    int facesFound = detector.findFaces(bitmap565, faces);
 	    PointF midPoint = new PointF();
 	    float eyeDistance = 0.0f;
 	    int eyeDistance22 = 0;
 	    float confidence = 0.0f;
 	    float x = 1.6f;
+	    int cagenum=(int)(1+(Math.random())*(6));
 	    
-	    Drawable Face1 = getResources().getDrawable(R.drawable.cage6);
+	    
+	    Drawable Face1 = getResources().getDrawable(R.drawable.cage1);
+	    
+	    
 	   // Draw
-	    
-	    
+
+
 	    if(facesFound > 0)
-	    { 	
+	    {
+	    	
 	        for(int index=0; index<facesFound; ++index){
+	        	
+	        	//int randomNum = 1 + (int)(Math.random()*6); 
+	        	
+	        	Random rn = new Random();
+	        	int n = 6 - 1 + 1;
+	        	int i = rn.nextInt() % n;
+	        	int randomNum =  1 + i;
+	        	
+		    	if(randomNum==1)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage1);
+		    	}
+		    	else if(randomNum==2)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage2);
+		    	}
+		    	else if(randomNum==3)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage3);
+		    	}
+		    	else if(randomNum==4)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage4);
+		    	}
+		    	else if(randomNum==5)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage5);
+		    	}
+		    	else if(randomNum==6)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage6);
+		    	}
+		    	
 	            faces[index].getMidPoint(midPoint);
-	            
+
 	            //faces[index].
 	            eyeDistance = faces[index].eyesDistance();
 	            eyeDistance22 = (int) faces[index].eyesDistance();
 	            confidence = faces[index].confidence();
-	             
+	           int y =  (int) faces[index].pose(Face.EULER_Y);
+	           int z = (int)(eyeDistance22)/4;
 	            Log.i("FaceDetector",
 	            		"Confidence: " + confidence +
 	            		", Eye distance: " + eyeDistance +
@@ -298,18 +321,20 @@ public class editingpage extends Activity{
 //	            		(float)midPoint.y - eyeDistance ,
 //	            		(float)midPoint.x + eyeDistance,
 //	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
-	            
+
 	            Face1.setBounds((int)midPoint.x - eyeDistance22,
 	            		(int)midPoint.y - eyeDistance22,
 	            		(int)midPoint.x + eyeDistance22,
-	            		(int)midPoint.y + eyeDistance22*2 - (int)eyeDistance22/2);
+	            		(int)midPoint.y + eyeDistance22*2-z);
+
+	           // Face1.setAutoMirrored(true);
 	            Face1.draw(canvas);
-	            
+
 	        }
 	    }
 //	    String path2 = "content://media/internal/images/media" + ".jpg";
 //	    //String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-//	    
+//
 //	    try {
 //	            FileOutputStream fos = new FileOutputStream(path2);
 //	            bitmap565.compress(CompressFormat.JPEG, 90, fos);

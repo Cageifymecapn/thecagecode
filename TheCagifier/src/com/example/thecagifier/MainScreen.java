@@ -3,6 +3,7 @@ import android.app.Activity;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -12,13 +13,12 @@ import android.widget.ImageView;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import android.content.Intent;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.graphics.BitmapFactory;
-
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 //import android.hardware.Camera.Face;
@@ -64,8 +64,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
         ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         ImageButton info = (ImageButton) findViewById(R.id.info);
-        ImageButton camswitch= (ImageButton) findViewById(R.id.switchcam);
-
+        ImageButton camswitch = (ImageButton) findViewById(R.id.imageButton1);
         
     
 	    //Leads to Info Screen
@@ -105,6 +104,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    		startActivityForResult(galleryIntent, 1);
 	    	}
 	    });
+	    
 	    camswitch.setOnClickListener(new View.OnClickListener() 
 	    {
 	    	@Override
@@ -166,6 +166,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	        camera.setDisplayOrientation(result);
 	    }
     
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)

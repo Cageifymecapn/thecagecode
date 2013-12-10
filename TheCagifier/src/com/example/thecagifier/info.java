@@ -15,7 +15,7 @@ public class info extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.info);
 		
-    	ImageButton back = (ImageButton) findViewById(R.id.back);        
+    	ImageButton back = (ImageButton) findViewById(R.id.imageButton1);        
         back.setOnClickListener(new OnClickListener() {
         	public void onClick(View v) {
         		setContentView(R.layout.info);
