@@ -108,7 +108,7 @@ public class editingpage extends Activity{
 	                		FaceDetector detector = new FaceDetector(facemap.getWidth(), facemap.getHeight(),5);
 	                		Face[] faces = new Face[5];
 	                		Bitmap bitmap565 = Bitmap.createBitmap(facemap.getWidth(), facemap.getHeight(), Config.RGB_565);
-	                		Drawable Face1 = getResources().getDrawable(R.drawable.face1);
+	                		Drawable Face1 = getResources().getDrawable(R.drawable.cage1);
 	                		Canvas facecanvas = new Canvas();
 	                	    facecanvas.setBitmap(bitmap565);
 	                	    
@@ -235,13 +235,16 @@ public class editingpage extends Activity{
 	    float confidence = 0.0f;
 	    float x = 1.6f;
 	    
-	    Drawable Face1 = getResources().getDrawable(R.drawable.face1);
+	    Drawable Face1 = getResources().getDrawable(R.drawable.cage6);
+	   // Draw
 	    
 	    
 	    if(facesFound > 0)
 	    { 	
 	        for(int index=0; index<facesFound; ++index){
 	            faces[index].getMidPoint(midPoint);
+	            
+	            //faces[index].
 	            eyeDistance = faces[index].eyesDistance();
 	            eyeDistance22 = (int) faces[index].eyesDistance();
 	            confidence = faces[index].confidence();
@@ -250,14 +253,15 @@ public class editingpage extends Activity{
 	            		"Confidence: " + confidence +
 	            		", Eye distance: " + eyeDistance +
 	            		", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-	            canvas.drawRect((float)midPoint.x - eyeDistance ,
-	            		(float)midPoint.y - eyeDistance ,
-	            		(float)midPoint.x + eyeDistance,
-	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
-	            Face1.setBounds((int)midPoint.x - eyeDistance22 ,
-	            		(int)midPoint.y - eyeDistance22 ,
+//	            canvas.drawRect((float)midPoint.x - eyeDistance ,
+//	            		(float)midPoint.y - eyeDistance ,
+//	            		(float)midPoint.x + eyeDistance,
+//	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
+	            
+	            Face1.setBounds((int)midPoint.x - eyeDistance22,
+	            		(int)midPoint.y - eyeDistance22,
 	            		(int)midPoint.x + eyeDistance22,
-	            		(int)midPoint.y + eyeDistance22*(2));
+	            		(int)midPoint.y + eyeDistance22*2 - (int)eyeDistance22/2);
 	            Face1.draw(canvas);
 	            
 	        }
