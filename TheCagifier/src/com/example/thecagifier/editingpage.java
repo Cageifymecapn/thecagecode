@@ -40,6 +40,7 @@ import android.graphics.drawable.Drawable;
 public class editingpage extends Activity{
 
 	Bitmap facemap;
+	int coordinates[]={sx,sy};
 
 	@Override
 	public void onCreate (Bundle savedInstanceState){
@@ -50,6 +51,31 @@ public class editingpage extends Activity{
 		Intent intent = getIntent();
 		String sentImagePath;
 		Bitmap sentImageBitmap;
+		ImageView cage1= (ImageView) findViewById(R.id.cage1);
+		//This gets the intent sent to create this Activity
+		Intent intent = getIntent();
+		String sentImagePath;
+		Bitmap sentImageBitmap;
+		cage1.getLocationOnScreen(coordinates);
+		cage1.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent me)
+			{
+				switch(me.getAction()){
+				case MotionEvent.ACTION_DOWN:
+					sx=(int) me.getX();
+					sy=(int) me.getY();
+					break;
+				case MotionEvent.ACTION_UP:
+					sx=(int) me.getX();
+					sy=(int) me.getY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					break;
+				}
+				return true;
+			}
+		});
 
 
 		final ImageView editorImageView = (ImageView) findViewById(R.id.imageView);
