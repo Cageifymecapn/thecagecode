@@ -17,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -31,6 +32,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 
@@ -163,8 +165,47 @@ public class editingpage extends Activity{
         download.setOnClickListener(new OnClickListener()
         {
 			@Override
-			public void onClick(View v) {
-				final Bitmap savedImage = editorImageView.getDrawingCache();
+			public void onClick(View arg0) {
+				
+				BitmapDrawable drawable = (BitmapDrawable) editorImageView.getDrawable();
+			    Bitmap image_to_save = drawable.getBitmap();
+			    String root = Environment.getExternalStorageDirectory().toString();
+			    File myDir = new File(root + "/The_Cagifier");    
+			    myDir.mkdirs();
+			    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+				String imageFileName = "IMG_" + timeStamp + ".jpg";
+			    File image=new File(myDir,imageFileName);
+			    
+			    boolean success = false;
+
+			    // Encode the file as a JPG image.
+			    FileOutputStream outStream;
+			    try {
+
+			        outStream = new FileOutputStream(image);
+			        image_to_save.compress(Bitmap.CompressFormat.JPEG, 100, outStream); 
+			        /* 100 to keep full quality of the image */
+
+			        outStream.flush();
+			        outStream.close();
+			        success = true;
+			    } catch (FileNotFoundException e) {
+			        e.printStackTrace();
+			    } catch (IOException e) {
+			        e.printStackTrace();
+			    }
+			    if (success) 
+			    {
+			        Toast.makeText(getApplicationContext(), "Cagification Saved",
+			                Toast.LENGTH_LONG).show();
+			    } else 
+			    {
+			        Toast.makeText(getApplicationContext(),
+			                "Error during image saving", Toast.LENGTH_LONG).show();
+			    }
+			    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
+			            Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+				/*final Bitmap savedImage = editorImageView.getDrawingCache();
 				
 				
 				
@@ -180,7 +221,7 @@ public class editingpage extends Activity{
 			            e.printStackTrace();
 			    } catch (IOException e) {
 			            e.printStackTrace();
-			    }
+			    }*/
 				
 				
 				
