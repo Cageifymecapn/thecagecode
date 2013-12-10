@@ -42,6 +42,7 @@
         </activity>
         <activity 
             android:name=".info"
+                    android:screenOrientation="portrait"
             android:label="The Cagifier"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
             
@@ -50,7 +51,8 @@
 <!--             </intent-filter> -->
         </activity>
         <activity
-            android:name=".editingpage" 
+            android:name=".editingpage"
+                                android:screenOrientation="portrait"
             android:label="The Cagifier" 
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
 <!--             <intent-filter> -->
