@@ -6,9 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Random;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -31,26 +29,20 @@ import android.media.FaceDetector.Face;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 
 public class editingpage extends Activity{
-
+int sx, sy;
 	Bitmap facemap;
 	int coordinates[]={sx,sy};
-
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editor);
 
-		//This gets the intent sent to create this Activity
-		Intent intent = getIntent();
-		String sentImagePath;
-		Bitmap sentImageBitmap;
 		ImageView cage1= (ImageView) findViewById(R.id.cage1);
 		//This gets the intent sent to create this Activity
 		Intent intent = getIntent();
@@ -119,65 +111,6 @@ public class editingpage extends Activity{
         ImageButton undo = (ImageButton) findViewById(R.id.imageButton3);
         ImageButton download = (ImageButton) findViewById(R.id.imageButton1);
 
-        editorImageView.setOnTouchListener(new OnTouchListener()
-        {
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-
-				int x = (int)event.getX();
-			    int y = (int)event.getY();
-
-				int action = event.getAction() & MotionEvent.ACTION_MASK;
-	            switch (action) {
-	            case MotionEvent.ACTION_UP: {
-	                int count = event.getPointerCount();
-	                Log.v("count >>", count + "");
-	                if (count == 2) {
-
-	                		FaceDetector detector = new FaceDetector(facemap.getWidth(), facemap.getHeight(),5);
-	                		Face[] faces = new Face[5];
-	                		Bitmap bitmap565 = Bitmap.createBitmap(facemap.getWidth(), facemap.getHeight(), Config.RGB_565);
-	                		Drawable Face1 = getResources().getDrawable(R.drawable.cage1);
-	                		Canvas facecanvas = new Canvas();
-	                	    facecanvas.setBitmap(bitmap565);
-
-	                	    int facesFound = detector.findFaces(bitmap565, faces);
-	                	    PointF midPoint = new PointF();
-	                	    float eyeDistance = 0.0f;
-	                	    float confidence = 0.0f;
-
-	                	    if(facesFound > 0)
-	                	    {
-	                	        for(int index=0; index<facesFound; ++index){
-	                	            faces[index].getMidPoint(midPoint);
-	                	            eyeDistance = faces[index].eyesDistance();
-	                	            confidence = faces[index].confidence();
-
-	                	            Log.i("FaceDetector",
-	                	            		"Confidence: " + confidence +
-	                	            		", Eye distance: " + eyeDistance +
-	                	            		", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-	                	            Face1.draw(facecanvas);
-//	                	            drawRect((float)midPoint.x - eyeDistance ,
-	                	            		//(float)midPoint.y - eyeDistance ,
-	                	            		//(float)midPoint.x + eyeDistance,
-	                	            	//	(float)midPoint.y + eyeDistance*(x), drawPaint);
-	                	        }
-	                	    }
-
-	                	    editorImageView.setImageBitmap(facemap);
-	                    }
-	                else
-	                {
-	                    Log.v("count not equal to 2","not 2");
-	                }
-	                break;
-	            }
-	            }
-	            return true;
-
-			}
-       });
 
         undo.setOnClickListener(new OnClickListener()
         {
@@ -233,26 +166,6 @@ public class editingpage extends Activity{
 			    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
 			            Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
-
-
-//				String timeStamp = "TIME"; //new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//				String imageFileName = "IMG_" + timeStamp + "_";
-//				File storageDir = new File(imageFileName);
-//				try {
-//					FileOutputStream out = new FileOutputStream(storageDir);
-//					savedImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-//					out.close();
-//				} catch (FileNotFoundException e) {
-//					//Auto-generated catch block
-//					e.printStackTrace();
-//				} catch (IOException e) {
-//					//Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//				Uri contentUri = Uri.fromFile(storageDir);
-//			    mediaScanIntent.setData(contentUri);
-//			    sendBroadcast(mediaScanIntent);
 			}
         });
 	}
@@ -301,10 +214,10 @@ public class editingpage extends Activity{
 	        	
 	        	//int randomNum = 1 + (int)(Math.random()*6); 
 	        	
-	        	Random rn = new Random();
-	        	int n = 6 - 1 + 1;
-	        	int i = rn.nextInt() % n;
-	        	int randomNum =  1 + i;
+	        	int[] morerandom= new int[420];
+	    	    int scaledrandomnum= (int)((Math.random())*(morerandom.length));
+	    	    int randomNum=scaledrandomnum/60;
+
 	        	
 		    	if(randomNum==1)
 		    	{
@@ -327,6 +240,10 @@ public class editingpage extends Activity{
 		    		Face1 = getResources().getDrawable(R.drawable.cage5);
 		    	}
 		    	else if(randomNum==6)
+		    	{
+		    		Face1 = getResources().getDrawable(R.drawable.cage6);
+		    	}
+		    	else if(randomNum==7)
 		    	{
 		    		Face1 = getResources().getDrawable(R.drawable.cage6);
 		    	}
@@ -374,5 +291,8 @@ public class editingpage extends Activity{
 	   // ImageView imageView = (ImageView)findViewById(R.id.image_view);
 	    Picture.setImageBitmap(bitmap565);
 	}
+
+
 }
 	//Everett: Pretty sure this is useless...
+

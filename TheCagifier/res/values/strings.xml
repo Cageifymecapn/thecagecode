@@ -21,4 +21,6 @@
     <string name="switchstatement">Switches from Front to Back Camera</string>
     <string name="INFORMATION">INFORMATION</string>
     <string name="takephoto"></string>
+        <string name="cage1"></string>
+    <string name="cage2"></string>
 </resources>

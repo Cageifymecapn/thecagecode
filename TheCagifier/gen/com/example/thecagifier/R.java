@@ -31,8 +31,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int download=0x7f020006;
         public static final int flip=0x7f020007;
         public static final int ic_launcher=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int info=0x7f02000a;
+        public static final int info=0x7f020009;
+        public static final int infopage=0x7f02000a;
         public static final int snap=0x7f02000b;
         public static final int switchbutton=0x7f02000c;
         public static final int takepic=0x7f02000d;
@@ -40,31 +40,20 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int upload=0x7f02000f;
     }
     public static final class id {
-        public static final int GridLayout1=0x7f070004;
-        public static final int TableLayout1=0x7f070017;
-        public static final int fullscreen_content_controls=0x7f070013;
-        public static final int gallery=0x7f070015;
-        public static final int imageButton1=0x7f070001;
-        public static final int imageButton2=0x7f070002;
+        public static final int RelativeLayout1=0x7f070000;
+        public static final int TableLayout1=0x7f07000c;
+        public static final int cage1=0x7f070004;
+        public static final int cage2=0x7f070002;
+        public static final int fullscreen_content_controls=0x7f070008;
+        public static final int gallery=0x7f070009;
+        public static final int imageButton1=0x7f070005;
         public static final int imageButton3=0x7f070003;
-        public static final int imageView=0x7f070000;
+        public static final int imageView=0x7f070001;
         public static final int imageView1=0x7f070006;
-        public static final int imageView2=0x7f070007;
-        public static final int imageView3=0x7f070008;
-        public static final int imageView4=0x7f070009;
-        public static final int imageView5=0x7f070010;
-        public static final int imageView6=0x7f07000a;
-        public static final int info=0x7f070016;
-        public static final int surfaceView1=0x7f070012;
-        public static final int takepicture=0x7f070014;
-        public static final int textSwitcher=0x7f070018;
-        public static final int textView1=0x7f07000d;
-        public static final int textView2=0x7f07000c;
-        public static final int textView3=0x7f07000e;
-        public static final int textView4=0x7f070011;
-        public static final int textView5=0x7f07000f;
-        public static final int textView6=0x7f070005;
-        public static final int textView7=0x7f07000b;
+        public static final int info=0x7f07000a;
+        public static final int surfaceView1=0x7f070007;
+        public static final int takepicture=0x7f07000b;
+        public static final int textSwitcher=0x7f07000d;
     }
     public static final class layout {
         public static final int editor=0x7f030000;
@@ -78,6 +67,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int Undo=0x7f050008;
         public static final int android_hardware_camera_autofocus=0x7f050007;
         public static final int app_name=0x7f050001;
+        public static final int cage1=0x7f050015;
+        public static final int cage2=0x7f050016;
         public static final int download=0x7f050005;
         public static final int flip=0x7f050006;
         public static final int flipstatement=0x7f05000e;
