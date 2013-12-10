@@ -2,15 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc">
-<!-- hello -->
+    android:background="#0099cc" >
+
+    <!-- hello -->
 
     <SurfaceView
         android:id="@+id/surfaceView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <GridLayout
+    <RelativeLayout
         android:id="@+id/fullscreen_content_controls"
         style="?buttonBarStyle"
         android:layout_width="match_parent"
@@ -22,36 +23,36 @@
         android:orientation="horizontal"
         tools:ignore="UselessParent" >
 
-        <Space
-            android:layout_column="1"
-            android:layout_gravity="fill_vertical"
-            android:layout_row="4" />
-
-        <ImageButton
-            android:id="@+id/takepicture"
-            android:layout_column="0"
-            android:layout_gravity="center_horizontal|top"
-            android:layout_row="4"
-            android:contentDescription="@string/takephoto"
-            android:src="@drawable/snap" />
-
         <ImageButton
             android:id="@+id/gallery"
-            android:layout_column="0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:layout_gravity="left|top"
-            android:layout_row="4"
             android:contentDescription="@string/uploadupload"
             android:src="@drawable/upload" />
 
         <ImageButton
+            android:id="@+id/takepicture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="142dp"
+            android:layout_toRightOf="@+id/gallery"
+            android:contentDescription="@string/takephoto"
+            android:src="@drawable/snap" />
+
+        <ImageButton
             android:id="@+id/info"
-            android:layout_column="0"
-            android:layout_gravity="right|top"
-            android:layout_row="4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
             android:contentDescription="@string/info"
             android:src="@drawable/info" />
 
-    </GridLayout>
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/imageButton1"
