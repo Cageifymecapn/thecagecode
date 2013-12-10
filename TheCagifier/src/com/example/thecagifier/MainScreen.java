@@ -64,6 +64,8 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
         ImageButton takephoto = (ImageButton) findViewById(R.id.takepicture);
         ImageButton openGallery = (ImageButton) findViewById(R.id.gallery);
         ImageButton info = (ImageButton) findViewById(R.id.info);
+        ImageButton camswitch= (ImageButton) findViewById(R.id.switchcam);
+
         
     
 	    //Leads to Info Screen
@@ -163,7 +165,7 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	        }
 	        camera.setDisplayOrientation(result);
 	    }
-    }
+    
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
