@@ -23,7 +23,7 @@
             android:name=".splash"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="The Cagifier"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:theme="@style/splashScreenTheme"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
