@@ -11,6 +11,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
@@ -30,9 +31,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.Drawable;
 
 
 public class editingpage extends Activity{
+	
+	Bitmap facemap;
+	
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -42,6 +47,8 @@ public class editingpage extends Activity{
 		Intent intent = getIntent();
 		String sentImagePath;
 		Bitmap sentImageBitmap;
+		
+	
 		final ImageView editorImageView = (ImageView) findViewById(R.id.imageView);
 		if(intent.getStringExtra("galleryImageUriString") != null)
 		{
@@ -50,7 +57,9 @@ public class editingpage extends Activity{
 	        
 			//sets the background Picture to that sentImageBitmap
 	        editorImageView.setImageBitmap(sentImageBitmap);
+	        facemap = sentImageBitmap;
 	        FacialRecognition(sentImageBitmap, editorImageView);
+	        
 		}
 		else if(intent.getStringExtra("takenImageUriString") != null)
 		{
@@ -64,11 +73,13 @@ public class editingpage extends Activity{
 			Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
 			
 	        editorImageView.setImageBitmap(rotatedBitmap);
+	        facemap = rotatedBitmap;
 	        FacialRecognition(rotatedBitmap, editorImageView);
 		}
 		
 		editorImageView.setDrawingCacheEnabled(true);
 		editorImageView.buildDrawingCache();
+		
 		
 		
 			
@@ -78,6 +89,67 @@ public class editingpage extends Activity{
         
         ImageButton undo = (ImageButton) findViewById(R.id.imageButton3);
         ImageButton download = (ImageButton) findViewById(R.id.imageButton1);
+        
+        editorImageView.setOnTouchListener(new OnTouchListener()
+        {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				int x = (int)event.getX();
+			    int y = (int)event.getY();
+			    
+				int action = event.getAction() & MotionEvent.ACTION_MASK;
+	            switch (action) {
+	            case MotionEvent.ACTION_UP: {
+	                int count = event.getPointerCount();
+	                Log.v("count >>", count + "");
+	                if (count == 2) {
+	                	
+	                		FaceDetector detector = new FaceDetector(facemap.getWidth(), facemap.getHeight(),5);
+	                		Face[] faces = new Face[5];
+	                		Bitmap bitmap565 = Bitmap.createBitmap(facemap.getWidth(), facemap.getHeight(), Config.RGB_565);
+	                		Drawable Face1 = getResources().getDrawable(R.drawable.face1);
+	                		Canvas facecanvas = new Canvas();
+	                	    facecanvas.setBitmap(bitmap565);
+	                	    
+	                	    int facesFound = detector.findFaces(bitmap565, faces);
+	                	    PointF midPoint = new PointF();
+	                	    float eyeDistance = 0.0f;
+	                	    float confidence = 0.0f;
+	                	    
+	                	    if(facesFound > 0)
+	                	    { 	
+	                	        for(int index=0; index<facesFound; ++index){
+	                	            faces[index].getMidPoint(midPoint);
+	                	            eyeDistance = faces[index].eyesDistance();
+	                	            confidence = faces[index].confidence();
+	                	             
+	                	            Log.i("FaceDetector",
+	                	            		"Confidence: " + confidence +
+	                	            		", Eye distance: " + eyeDistance +
+	                	            		", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
+	                	            Face1.draw(facecanvas);
+//	                	            drawRect((float)midPoint.x - eyeDistance ,
+	                	            		//(float)midPoint.y - eyeDistance ,
+	                	            		//(float)midPoint.x + eyeDistance,
+	                	            	//	(float)midPoint.y + eyeDistance*(x), drawPaint);
+	                	        }
+	                	    }
+	                	    
+	                	    editorImageView.setImageBitmap(facemap);
+	                    }
+	                else
+	                {
+	                    Log.v("count not equal to 2","not 2");
+	                }
+	                break;
+	            }
+	            }       
+	            return true;
+	            
+			}
+       });
+        
         undo.setOnClickListener(new OnClickListener()
         {
 			@Override
@@ -93,24 +165,43 @@ public class editingpage extends Activity{
 			@Override
 			public void onClick(View v) {
 				final Bitmap savedImage = editorImageView.getDrawingCache();
-				String timeStamp = "TIME"; //new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-				String imageFileName = "IMG_" + timeStamp + "_";
-				File storageDir = new File(imageFileName);
-				try {
-					FileOutputStream out = new FileOutputStream(storageDir);
-					savedImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-					out.close();
-				} catch (FileNotFoundException e) {
-					//Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					//Auto-generated catch block
-					e.printStackTrace();
-				}
-				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-				Uri contentUri = Uri.fromFile(storageDir);
-			    mediaScanIntent.setData(contentUri);
-			    sendBroadcast(mediaScanIntent);
+				
+				
+				
+			    String path2 = "content://media/internal/images/media" + ".jpg";
+			    //String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
+			    
+			    try {
+			            FileOutputStream fos = new FileOutputStream(path2);
+			            savedImage.compress(CompressFormat.JPEG, 90, fos);
+			            fos.flush();
+			            fos.close();
+			    } catch (FileNotFoundException e) {
+			            e.printStackTrace();
+			    } catch (IOException e) {
+			            e.printStackTrace();
+			    }
+				
+				
+				
+//				String timeStamp = "TIME"; //new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//				String imageFileName = "IMG_" + timeStamp + "_";
+//				File storageDir = new File(imageFileName);
+//				try {
+//					FileOutputStream out = new FileOutputStream(storageDir);
+//					savedImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//					out.close();
+//				} catch (FileNotFoundException e) {
+//					//Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					//Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//				Uri contentUri = Uri.fromFile(storageDir);
+//			    mediaScanIntent.setData(contentUri);
+//			    sendBroadcast(mediaScanIntent);
 			}
         });
 	}
@@ -140,14 +231,19 @@ public class editingpage extends Activity{
 	    int facesFound = detector.findFaces(bitmap565, faces);
 	    PointF midPoint = new PointF();
 	    float eyeDistance = 0.0f;
+	    int eyeDistance22 = 0;
 	    float confidence = 0.0f;
 	    float x = 1.6f;
+	    
+	    Drawable Face1 = getResources().getDrawable(R.drawable.face1);
+	    
 	    
 	    if(facesFound > 0)
 	    { 	
 	        for(int index=0; index<facesFound; ++index){
 	            faces[index].getMidPoint(midPoint);
 	            eyeDistance = faces[index].eyesDistance();
+	            eyeDistance22 = (int) faces[index].eyesDistance();
 	            confidence = faces[index].confidence();
 	             
 	            Log.i("FaceDetector",
@@ -158,47 +254,29 @@ public class editingpage extends Activity{
 	            		(float)midPoint.y - eyeDistance ,
 	            		(float)midPoint.x + eyeDistance,
 	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
+	            Face1.setBounds((int)midPoint.x - eyeDistance22 ,
+	            		(int)midPoint.y - eyeDistance22 ,
+	            		(int)midPoint.x + eyeDistance22,
+	            		(int)midPoint.y + eyeDistance22*(2));
+	            Face1.draw(canvas);
+	            
 	        }
 	    }
-	    
-	    String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-	    
-	    try {
-	            FileOutputStream fos = new FileOutputStream(filepath);
-	            bitmap565.compress(CompressFormat.JPEG, 90, fos);
-	            fos.flush();
-	            fos.close();
-	    } catch (FileNotFoundException e) {
-	            e.printStackTrace();
-	    } catch (IOException e) {
-	            e.printStackTrace();
-	    }
+//	    String path2 = "content://media/internal/images/media" + ".jpg";
+//	    //String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
+//	    
+//	    try {
+//	            FileOutputStream fos = new FileOutputStream(path2);
+//	            bitmap565.compress(CompressFormat.JPEG, 90, fos);
+//	            fos.flush();
+//	            fos.close();
+//	    } catch (FileNotFoundException e) {
+//	            e.printStackTrace();
+//	    } catch (IOException e) {
+//	            e.printStackTrace();
+//	    }
 	   // ImageView imageView = (ImageView)findViewById(R.id.image_view);
 	    Picture.setImageBitmap(bitmap565);
 	}
-	
-	//Everett: Pretty sure this is useless...
-	private void galleryAddPic(Bitmap savedImage) throws IOException{
-		//Create an image file name
-	    String timeStamp = 
-	        new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-	    String imageFileName = "IMG_" + timeStamp + "_";
-	    
-		//Sets the storage directory
-	    File storageDir = new File("content://media/internal/images/media"
-			    , imageFileName);
-
-	    File file = File.createTempFile(
-	            imageFileName, 
-	            ".jpg", 
-	            storageDir
-	        );
-	    if(!file.exists())
-	    	file.createNewFile();
-	    //Append the file name to the intent
-		String fileString = file.toString();
-	    Uri contentUri = Uri.fromFile(file);
-	    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
-	    startActivityForResult(mediaScanIntent, 2);
-	}
 }
+	//Everett: Pretty sure this is useless...
