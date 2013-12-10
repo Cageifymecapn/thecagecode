@@ -3,8 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:columnCount="3"
-    android:gravity="bottom" >
+    android:columnCount="3" >
 
     <ImageView
         android:id="@+id/imageView"
@@ -34,6 +33,17 @@
         android:contentDescription="@string/Undo"
         android:src="@drawable/undo" />
 
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="590dp"
+        android:layout_marginTop="249dp"
+                android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/download"
+        android:src="@drawable/download" />
+
     <ImageView
         android:id="@+id/cage1"
         android:layout_width="63dp"
@@ -45,14 +55,5 @@
         android:longClickable="true"
         android:src="@drawable/cage1"
         android:visibility="invisible" />
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:contentDescription="@string/download"
-        android:src="@drawable/download" />
 
 </RelativeLayout>
