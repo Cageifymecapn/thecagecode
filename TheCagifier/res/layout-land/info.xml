@@ -9,10 +9,10 @@
         android:id="@+id/imageView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
         android:contentDescription="@string/Undo"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/infopage" />
 
     <ImageButton
         android:id="@+id/imageButton1"
