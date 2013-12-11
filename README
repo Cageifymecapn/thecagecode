@@ -1,5 +1,8 @@
-The App should be run on an Android phone running at least 2.3.6
 
+Important Sepecification
+-The App should be run on an Android phone running at least 2.3
+-Device must have SD
+-Photos Can only be taken in Portrait 
 
 
 Compiling and Running Code from Scratch
@@ -10,9 +13,9 @@ Compiling and Running Code from Scratch
 
 3) Press Continue button or wait 10 seconds to proceed to Main screen
 
-4) Press Take Photo Button to Capture photo or Upload button to select photo from Gallery
+4) Press Switch Camera Button to Switch Between Front and Back Camera
 
-5) Press Shuffle Button to change Nic Cage Face on image
+4) Press Take Photo Button to Capture photo or Upload button to select photo from Gallery
 
 6) Press Download Button to Save Picture to Gallery
 
