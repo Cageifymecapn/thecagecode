@@ -67,7 +67,7 @@ public class splash extends Activity{
       
     
     
-        int[] morerandom= new int[960];
+        int[] morerandom= new int[940];
 	    int scaledrandomnum= (int)((Math.random())*(morerandom.length));
 	    int factnum=scaledrandomnum/20;
     // to keep current Index of text
