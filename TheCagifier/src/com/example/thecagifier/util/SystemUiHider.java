@@ -169,4 +169,4 @@ public abstract class SystemUiHider {
          */
         public void onVisibilityChange(boolean visible);
     }
-}
+} 
