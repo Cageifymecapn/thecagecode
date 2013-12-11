@@ -1,7 +1,9 @@
+
 Important Specification
 -The App should be run on an Android phone running at least 2.3
--Device must have SD
--Photos Can only be taken in Portrait 
+-Device must have SD Card
+-Photos can only be taken in Portrait 
+-Maximum of 5 faces detected
 
 
 Compiling and Running Code from Scratch
