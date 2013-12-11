@@ -1,3 +1,19 @@
-This is the THE CAGEIFIER (we can workshop the title...)
+The App should be run on an Android phone running at least 2.3.6
 
-Patent Pending. 
+
+
+Compiling and Running Code from Scratch
+
+1) Place entirety of "TheCagifier" folder into Eclipse project
+
+2) Run as... Android Application
+
+3) Press Continue button or wait 10 seconds to proceed to Main screen
+
+4) Press Take Photo Button to Capture photo or Upload button to select photo from Gallery
+
+5) Press Shuffle Button to change Nic Cage Face on image
+
+6) Press Download Button to Save Picture to Gallery
+
+7) Press Back Button to return to Main Screen
