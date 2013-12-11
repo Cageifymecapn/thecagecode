@@ -303,7 +303,14 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 		param = camera.getParameters();
 		//modify parameter
 		param.setPreviewFrameRate(20);
-		param.setPreviewSize(1280, 720);
+		int w = getResources().getDisplayMetrics().widthPixels;
+        int h = getResources().getDisplayMetrics().heightPixels;
+		try{
+	        param.setPictureSize(h, w);
+	        camera.setParameters(param);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+		}
 		
 		camera.setDisplayOrientation(270);
 		camera.setParameters(param);
