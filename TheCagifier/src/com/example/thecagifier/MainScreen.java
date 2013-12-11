@@ -209,36 +209,6 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
     		//This adds the photo to the gallery
     	}
     };
-
-//    private void galleryAddPic(Intent data) throws IOException{
-//	//Create an image file name
-//    String timeStamp = 
-//        new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//    String imageFileName = "IMG_" + timeStamp + "_";
-//    
-//	//Sets the storage directory
-//    File storageDir = new File(
-//		Environment.getExternalStoragePublicDirectory(
-//		        Environment.DIRECTORY_PICTURES
-//		    ), imageFileName);
-//
-//    File file = File.createTempFile(
-//            imageFileName, 
-//            ".jpg", 
-//            storageDir
-//        );
-//    if(!file.exists())
-//    	file.createNewFile();
-//    //Append the file name to the intent
-//	String fileString = file.toString();
-//    Uri contentUri = Uri.fromFile(file);
-//    Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, contentUri);
-//    startActivityForResult(mediaScanIntent, 2);
-
-//  Bitmap theImage = (Bitmap) data.getExtras().get("data");
-//  MediaStore.Images.Media.insertImage(getContentResolver(), theImage, file.getName() , "Made by Cagifier");
-
-
 	@Override
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {
 	     jpegCallback = new PictureCallback() {
@@ -327,23 +297,71 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	}
 
 
-public String getPath(Uri uri) {
-    // just some safety built in 
-    if( uri == null ) {
-        //perform some logging or show user feedback
-        return null;
-    }
-    // try to retrieve the image from the media store first
-    // this will only work for images selected from gallery
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = managedQuery(uri, projection, null, null, null);
-    if( cursor != null ){
-        int column_index = cursor
-        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-    // this is our fallback here
-    return uri.getPath();
+	public String getPath(Uri uri) {
+	    // just some safety built in 
+	    if( uri == null ) {
+	        //perform some logging or show user feedback
+	        return null;
+	    }
+	    // try to retrieve the image from the media store first
+	    // this will only work for images selected from gallery
+	    String[] projection = { MediaStore.Images.Media.DATA };
+	    Cursor cursor = managedQuery(uri, projection, null, null, null);
+	    if( cursor != null ){
+	        int column_index = cursor
+	        .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+	        return cursor.getString(column_index);
+	    }
+	    // this is our fallback here
+	    return uri.getPath();
 	}
+	boolean cardstate = true;
+	private boolean checkForDirectory()
+	{
+	 String state = Environment.getExternalStorageState();
+	
+	    if (Environment.MEDIA_BAD_REMOVAL.equals(state)) {
+	        cardstate = false;
+	        Toast.makeText(getApplicationContext(),
+	     		   "Memory Card was removed before it was unmounted", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_CHECKING.equals(state)) {
+	 	   Toast.makeText(getApplicationContext(),
+	 			   "Memory Card is present and being disk-checked", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_MOUNTED.equals(state)) {
+	         cardstate = true;
+	        //runDialog("Memory Card is present and mounted with read/write access");
+	    }
+	    else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+	 	   Toast.makeText(getApplicationContext(),
+	 			   "Memory Card is present and mounted with readonly access", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_NOFS.equals(state)) {
+	        cardstate = false;
+	        Toast.makeText(getApplicationContext(),
+	     		   "Memory Card is present but is blank or using unsupported file system", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_REMOVED.equals(state)) {
+	        cardstate = false;
+	        Toast.makeText(getApplicationContext(),
+	     		   "Memory Card is not present", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_SHARED.equals(state)) {
+	        cardstate = false;
+	        Toast.makeText(getApplicationContext(),
+	     		   "Memory Card is present but shared via USB mass storage", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_UNMOUNTABLE.equals(state)) {
+	        cardstate = false;
+	        Toast.makeText(getApplicationContext(),
+	     		   "Memory Card is present but cannot be mounted", Toast.LENGTH_LONG).show();
+	    }
+	    else if (Environment.MEDIA_UNMOUNTED.equals(state)) {
+	        cardstate = false;
+	    }
+	    return cardstate;
+	}
+}
 }
