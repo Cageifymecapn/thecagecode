@@ -23,4 +23,5 @@
     <string name="takephoto"></string>
         <string name="cage1"></string>
     <string name="cage2"></string>
+    <string name="continuebutton">TODO</string>
 </resources>

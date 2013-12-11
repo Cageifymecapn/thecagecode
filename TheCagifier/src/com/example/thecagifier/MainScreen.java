@@ -128,45 +128,41 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	    	setCameraDisplayOrientation(MainScreen.this, currentCameraId, camera);
 	    	try 
 	    	{
-
-	    	    camera.setPreviewDisplay(surfaceHolder);
-	    	    
+	    	    camera.setPreviewDisplay(surfaceHolder);  	    
 	    	} catch (IOException e) {
 	    	    e.printStackTrace();
 	    	}
 	    	camera.startPreview();
 	    	}
-		    public final void setCameraDisplayOrientation(Activity activity, int cameraId, Camera camera) {
-		        android.hardware.Camera.CameraInfo info =
-		                new android.hardware.Camera.CameraInfo();
-		        android.hardware.Camera.getCameraInfo(cameraId, info);
-		        int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-		        int degrees = 0;
-		        switch (rotation) 
-		        {
-		            case Surface.ROTATION_0: degrees = 0; break;
-		            case Surface.ROTATION_90: degrees = 90; break;
-		            case Surface.ROTATION_180: degrees = 180; break;
-		            case Surface.ROTATION_270: degrees = 270; break;
-		        }
-
-		        int result;
-		        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) 
-		        {
-		            result = (info.orientation + degrees) % 360;
-		            result = (360 - result) % 360;  // compensate the mirror
-		        } else {  // back-facing
-		            result = (info.orientation - degrees + 360) % 360;
-		        }
-		        camera.setDisplayOrientation(result);
-		        
-		    }
 	    });
 	    
-	    
     }
+	    public static void setCameraDisplayOrientation(Activity activity,
+	            int cameraId, android.hardware.Camera camera) {
+	        android.hardware.Camera.CameraInfo info =
+	                new android.hardware.Camera.CameraInfo();
+	        android.hardware.Camera.getCameraInfo(cameraId, info);
+	        int rotation = activity.getWindowManager().getDefaultDisplay()
+	                .getRotation();
+	        int degrees = 0;
+	        switch (rotation) 
+	        {
+	            case Surface.ROTATION_0: degrees = 0; break;
+	            case Surface.ROTATION_90: degrees = 90; break;
+	            case Surface.ROTATION_180: degrees = 180; break;
+	            case Surface.ROTATION_270: degrees = 270; break;
+	        }
 
-	    
+	        int result;
+	        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) 
+	        {
+	            result = (info.orientation + degrees) % 360;
+	            result = (360 - result) % 360;  // compensate the mirror
+	        } else {  // back-facing
+	            result = (info.orientation - degrees + 360) % 360;
+	        }
+	        camera.setDisplayOrientation(result);
+	    }
     
 
 
@@ -278,23 +274,23 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 	 		}
 	 	};
 	 	//setContentView(R.layout.editor);
+	}
 
-	};
-
-    private void takePicture() {
-        camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-        SurfaceView mainscreenSurface = (SurfaceView) findViewById(R.id.surfaceView1);
-        mainscreenSurface.buildDrawingCache();
-        Bitmap pictureTaken = mainscreenSurface.getDrawingCache();
-	    ImageView editorPicture = (ImageView) findViewById(R.id.imageView);
-	    editorPicture.setImageBitmap(pictureTaken);	 
-        setContentView(R.layout.editor);
-    }
     
 	@Override
 	public void surfaceCreated(SurfaceHolder surfaceholder) {
 		try{
 		     camera = Camera.open();
+		     setCameraDisplayOrientation(MainScreen.this, currentCameraId, camera);
+		    	try 
+		    	{
+
+		    	    camera.setPreviewDisplay(surfaceHolder);
+		    	    
+		    	} catch (IOException e) {
+		    	    e.printStackTrace();
+		    	}
+		     
 		}catch(RuntimeException e){
 			Log.e(tag, "init_camera: " + e);
 			return;
@@ -302,25 +298,25 @@ public class MainScreen extends Activity implements SurfaceHolder.Callback {
 		Camera.Parameters param;
 		param = camera.getParameters();
 		//modify parameter
-		param.setPreviewFrameRate(20);
+		param.setPreviewFrameRate(30);
 		int w = getResources().getDisplayMetrics().widthPixels;
         int h = getResources().getDisplayMetrics().heightPixels;
-		try{
-	        param.setPictureSize(h, w);
-	        camera.setParameters(param);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-		}
-		
-		camera.setDisplayOrientation(270);
-		camera.setParameters(param);
+                try{
+         param.setPictureSize(h, w);
+         camera.setParameters(param);
+         } catch (Exception e) {
+         e.printStackTrace();
+                }
+                
+//		camera.setDisplayOrientation(270);
 		try {
 			camera.setPreviewDisplay(surfaceHolder);
-		    camera.startPreview();
 		} catch (Exception e) {
 			Log.e(tag, "init_camera: " + e);
 		    return;
 		}
+	    camera.startPreview();
+
 	}
 
 	@Override

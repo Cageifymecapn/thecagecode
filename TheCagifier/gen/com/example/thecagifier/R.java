@@ -28,20 +28,21 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int cage4=0x7f020003;
         public static final int cage5=0x7f020004;
         public static final int cage6=0x7f020005;
-        public static final int download=0x7f020006;
-        public static final int flip=0x7f020007;
-        public static final int ic_launcher=0x7f020008;
-        public static final int info=0x7f020009;
-        public static final int infopage=0x7f02000a;
-        public static final int snap=0x7f02000b;
-        public static final int switchbutton=0x7f02000c;
-        public static final int takepic=0x7f02000d;
-        public static final int undo=0x7f02000e;
-        public static final int upload=0x7f02000f;
+        public static final int continuebutton=0x7f020006;
+        public static final int download=0x7f020007;
+        public static final int flip=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int icon=0x7f02000a;
+        public static final int info=0x7f02000b;
+        public static final int infopage=0x7f02000c;
+        public static final int snap=0x7f02000d;
+        public static final int switchbutton=0x7f02000e;
+        public static final int takepic=0x7f02000f;
+        public static final int undo=0x7f020010;
+        public static final int upload=0x7f020011;
     }
     public static final class id {
         public static final int RelativeLayout1=0x7f070000;
-        public static final int TableLayout1=0x7f07000c;
         public static final int cage1=0x7f070004;
         public static final int cage2=0x7f070002;
         public static final int fullscreen_content_controls=0x7f070008;
@@ -53,7 +54,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int info=0x7f07000a;
         public static final int surfaceView1=0x7f070007;
         public static final int takepicture=0x7f07000b;
-        public static final int textSwitcher=0x7f07000d;
+        public static final int textSwitcher=0x7f07000c;
     }
     public static final class layout {
         public static final int editor=0x7f030000;
@@ -69,6 +70,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int app_name=0x7f050001;
         public static final int cage1=0x7f050015;
         public static final int cage2=0x7f050016;
+        public static final int continuebutton=0x7f050017;
         public static final int download=0x7f050005;
         public static final int flip=0x7f050006;
         public static final int flipstatement=0x7f05000e;

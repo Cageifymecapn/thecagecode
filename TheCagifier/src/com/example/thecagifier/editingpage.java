@@ -6,7 +6,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
@@ -14,8 +16,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.widget.GridLayout;
+import android.widget.GridLayout.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -29,48 +35,32 @@ import android.media.FaceDetector.Face;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 
 public class editingpage extends Activity{
-int sx, sy;
+
 	Bitmap facemap;
-	int coordinates[]={sx,sy};
+	ImageView cagepic1;
+
 	@Override
 	public void onCreate (Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.editor);
+		
+		
 
-		ImageView cage1= (ImageView) findViewById(R.id.cage1);
 		//This gets the intent sent to create this Activity
 		Intent intent = getIntent();
 		String sentImagePath;
 		Bitmap sentImageBitmap;
-		cage1.getLocationOnScreen(coordinates);
-		cage1.setOnTouchListener(new OnTouchListener() {
-			@Override
-			public boolean onTouch(View v, MotionEvent me)
-			{
-				switch(me.getAction()){
-				case MotionEvent.ACTION_DOWN:
-					sx=(int) me.getX();
-					sy=(int) me.getY();
-					break;
-				case MotionEvent.ACTION_UP:
-					sx=(int) me.getX();
-					sy=(int) me.getY();
-					break;
-				case MotionEvent.ACTION_MOVE:
-					break;
-				}
-				return true;
-			}
-		});
 
 
 		final ImageView editorImageView = (ImageView) findViewById(R.id.imageView);
+		
 		if(intent.getStringExtra("galleryImageUriString") != null)
 		{
 			sentImagePath = intent.getStringExtra("galleryImageUriString");
@@ -78,6 +68,7 @@ int sx, sy;
 
 			//sets the background Picture to that sentImageBitmap
 	        editorImageView.setImageBitmap(sentImageBitmap);
+	       // editorImageView.setLayoutDirection(1);
 	        facemap = sentImageBitmap;
 	        FacialRecognition(sentImageBitmap, editorImageView);
 
@@ -110,8 +101,21 @@ int sx, sy;
 
         ImageButton undo = (ImageButton) findViewById(R.id.imageButton3);
         ImageButton download = (ImageButton) findViewById(R.id.imageButton1);
+        
+        ImageView cagepic1 = (ImageView) findViewById(R.id.cage1);
+        cagepic1.setVisibility(0);
+       // RelativeLayout.LayoutParams params1 = new RelativeLayout.LayoutParams(100, 100);
+       // GridLayout.LayoutParams param =  new GridLayout.LayoutParams();
 
-
+        cagepic1.setOnTouchListener(new OnTouchListener()
+        {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+			return false;
+			}
+       });
+        
         undo.setOnClickListener(new OnClickListener()
         {
 			@Override
@@ -166,6 +170,26 @@ int sx, sy;
 			    sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED,
 			            Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 
+
+
+//				String timeStamp = "TIME"; //new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//				String imageFileName = "IMG_" + timeStamp + "_";
+//				File storageDir = new File(imageFileName);
+//				try {
+//					FileOutputStream out = new FileOutputStream(storageDir);
+//					savedImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+//					out.close();
+//				} catch (FileNotFoundException e) {
+//					//Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					//Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//				Uri contentUri = Uri.fromFile(storageDir);
+//			    mediaScanIntent.setData(contentUri);
+//			    sendBroadcast(mediaScanIntent);
 			}
         });
 	}
@@ -198,7 +222,6 @@ int sx, sy;
 	    int eyeDistance22 = 0;
 	    float confidence = 0.0f;
 	    float x = 1.6f;
-	    int cagenum=(int)(1+(Math.random())*(6));
 	    
 	    
 	    Drawable Face1 = getResources().getDrawable(R.drawable.cage1);
@@ -212,16 +235,13 @@ int sx, sy;
 	    	
 	        for(int index=0; index<facesFound; ++index){
 	        	
-	        	//int randomNum = 1 + (int)(Math.random()*6); 
-	        	
-	        	int[] morerandom= new int[420];
+	        	int[] morerandom= new int[70];
 	    	    int scaledrandomnum= (int)((Math.random())*(morerandom.length));
-	    	    int randomNum=scaledrandomnum/60;
-
+	    	    int randomNum=scaledrandomnum/7;
 	        	
 		    	if(randomNum==1)
 		    	{
-		    		Face1 = getResources().getDrawable(R.drawable.cage1);
+		    		Face1 = getResources().getDrawable(R.drawable.cage3);
 		    	}
 		    	else if(randomNum==2)
 		    	{
@@ -229,7 +249,7 @@ int sx, sy;
 		    	}
 		    	else if(randomNum==3)
 		    	{
-		    		Face1 = getResources().getDrawable(R.drawable.cage3);
+		    		Face1 = getResources().getDrawable(R.drawable.cage1);
 		    	}
 		    	else if(randomNum==4)
 		    	{
@@ -248,6 +268,8 @@ int sx, sy;
 		    		Face1 = getResources().getDrawable(R.drawable.cage6);
 		    	}
 		    	
+		    	//Face1 = getResources().getDrawable(R.drawable.cage1);
+		    	
 	            faces[index].getMidPoint(midPoint);
 
 	            //faces[index].
@@ -260,39 +282,21 @@ int sx, sy;
 	            		"Confidence: " + confidence +
 	            		", Eye distance: " + eyeDistance +
 	            		", Mid Point: (" + midPoint.x + ", " + midPoint.y + ")");
-//	            canvas.drawRect((float)midPoint.x - eyeDistance ,
-//	            		(float)midPoint.y - eyeDistance ,
-//	            		(float)midPoint.x + eyeDistance,
-//	            		(float)midPoint.y + eyeDistance*(x), drawPaint);
 
-	            Face1.setBounds((int)midPoint.x - eyeDistance22,
+	           Face1.setBounds((int)midPoint.x - eyeDistance22,
 	            		(int)midPoint.y - eyeDistance22,
 	            		(int)midPoint.x + eyeDistance22,
 	            		(int)midPoint.y + eyeDistance22*2-z);
-
-	           // Face1.setAutoMirrored(true);
+	          
+	            
 	            Face1.draw(canvas);
-
+	            
 	        }
 	    }
-//	    String path2 = "content://media/internal/images/media" + ".jpg";
-//	    //String filepath = Environment.getExternalStorageDirectory() + "/facedetect" + System.currentTimeMillis() + ".jpg";
-//
-//	    try {
-//	            FileOutputStream fos = new FileOutputStream(path2);
-//	            bitmap565.compress(CompressFormat.JPEG, 90, fos);
-//	            fos.flush();
-//	            fos.close();
-//	    } catch (FileNotFoundException e) {
-//	            e.printStackTrace();
-//	    } catch (IOException e) {
-//	            e.printStackTrace();
-//	    }
-	   // ImageView imageView = (ImageView)findViewById(R.id.image_view);
+
+	    
 	    Picture.setImageBitmap(bitmap565);
+	   
 	}
-
-
 }
 	//Everett: Pretty sure this is useless...
-
