@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, MyCamera!</string>
-    <string name="app_name">Cagify</string>
+    <string name="app_name">Cagifier</string>
     <string name="snap">snap</string>
     <string name="uploadupload">uploadupload</string>
     <string name="info"></string>
@@ -12,6 +12,7 @@
     <string name="imageView"></string>
     <string name="gallery">gallery</string>
     <string name="Downloadstatement">Saves an image to your Gallery</string>
+    <string name="android.permission.CAMERA">TODO</string>
     <string name="takepicstatement">Takes a Picture</string>
     <string name="infostatement">Loads this Info Screen</string>
     <string name="flipstatement">Switches the direction Nick faces</string>
@@ -20,8 +21,18 @@
     <string name="switchcameras"></string>
     <string name="switchstatement">Switches from Front to Back Camera</string>
     <string name="INFORMATION">INFORMATION</string>
+        <string name="continuebutton">Continue button</string>
     <string name="takephoto"></string>
         <string name="cage1"></string>
     <string name="cage2"></string>
-    <string name="continuebutton">TODO</string>
+    <string name="thecagifier.AIzaSyBveLvukG_FUHP5TA3YmTKegzu4ojSYeJ4">TODO</string>
+    <string name="android.permission.WRITE_EXTERNAL_STORAGE">TODO</string>
+    <string name="AIzaSyBveLvukG_FUHP5TA3YmTKegzu4ojSYeJ4">TODO</string>
+    <string name="android.intent.category.LAUNCHER">TODO</string>
+    <string name="android.intent.action.MAIN">TODO</string>
+    <string name="thecagifier.splash">TODO</string>
+    <string name="thecagifier.editingpage">TODO</string>
+    <string name="thecagifier.MainScreen">TODO</string>
+    <string name="thecagifier.info">TODO</string>
+    <string name="android.hardware.camera">TODO</string>
 </resources>
