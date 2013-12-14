@@ -16,16 +16,6 @@
         android:scaleType="fitXY"
         android:src="@drawable/ic_launcher" />
 
-    <ImageView
-        android:id="@+id/cage2"
-        android:layout_width="69dp"
-        android:layout_height="105dp"
-        android:layout_below="@+id/imageView"
-        android:layout_toRightOf="@+id/imageView"
-        android:contentDescription="@string/cage2"
-        android:src="@drawable/cage2"
-        android:visibility="invisible" />
-
     <ImageButton
         android:id="@+id/imageButton3"
         android:layout_width="wrap_content"
@@ -34,17 +24,6 @@
         android:contentDescription="@string/Undo"
         android:src="@drawable/undo" />
 
-    <ImageView
-        android:id="@+id/cage1"
-        android:layout_width="63dp"
-        android:layout_height="88dp"
-        android:layout_alignTop="@+id/imageView"
-        android:layout_gravity="left|top"
-        android:layout_toRightOf="@+id/cage2"
-        android:contentDescription="@string/cage1"
-        android:longClickable="true"
-        android:src="@drawable/cage1"
-        android:visibility="invisible" />
 
     <ImageButton
         android:id="@+id/imageButton1"
